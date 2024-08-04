@@ -1,0 +1,61 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #e7e7e7;
+}
+.titleHeader{
+  display: flex;
+  width: auto;
+  height: 6.28rem;
+  font-size: 3rem;
+  font-weight: 200;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  letter-spacing: 0.1rem;
+  background-color: white;
+  border-bottom: 1px solid #e7e7e7;
+}
+/* Add this class to make the header sticky */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  width: 100%;
+  letter-spacing: 0.1rem;
+  background-color: white;
+}
+
+@media print {
+  .sticky-header {
+    display: none;
+  }
+}
+ 
+
+.logoRight {
+  width: auto;
+  height: 1rem;
+  text-align: right;
+  max-height: 50px;
+}
+
+.logoLeft {
+  width: auto;
+  height: 1rem;
+  text-align: left;
+  max-height: 50px;
+}
+
+.middle {
+  text-align: center;
+}
+
+ 
+
+.homeLink {
+  text-decoration: none;
+  color: #0070f3;
+}

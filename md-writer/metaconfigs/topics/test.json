@@ -1,0 +1,57 @@
+{
+    "Slam": {
+        "access": {
+            "readable": 2,
+            "writable": 1
+        },
+        "isOrdered": true,
+        "orderedBy": "number",
+        "secureLevel": "1",
+        "exposeType": "inner",
+        "supportPublish": false
+    },
+    "Kubernetes": {
+        "access": {
+            "readable": 2,
+            "writable": 1
+        },
+        "isOrdered": true,
+        "orderedBy": "number",
+        "secureLevel": "1",
+        "exposeType": "inner",
+        "supportPublish": false
+    },
+    "MetaData": {
+        "access": {
+            "readable": 2,
+            "writable": 1
+        },
+        "isOrdered": true,
+        "orderedBy": "number",
+        "secureLevel": "1",
+        "exposeType": "inner",
+        "supportPublish": false
+    },
+    "ARC": {
+        "access": {
+            "readable": 2,
+            "writable": 1
+        },
+        "isOrdered": true,
+        "orderedBy": "number",
+        "secureLevel": "1",
+        "exposeType": "inner",
+        "supportPublish": false
+    },
+    "Mobilex": {
+        "access": {
+            "readable": 2,
+            "writable": 1
+        },
+        "isOrdered": true,
+        "orderedBy": "number",
+        "secureLevel": "1",
+        "exposeType": "inner",
+        "supportPublish": false
+    }    
+}

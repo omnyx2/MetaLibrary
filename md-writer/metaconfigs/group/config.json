@@ -1,0 +1,8 @@
+{
+  "devAdmin": {
+    "accessLevel": 0
+  },
+  "admin": {
+    "accessLevel": 1
+  }
+}

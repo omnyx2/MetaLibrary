@@ -1,0 +1,13 @@
+{
+    "bookList": {
+       "Test": {
+          "topics":{
+            "isOrdered": true,
+            "tables": ["Slam, ARC, MetaData, Kubernetes, Mobilex"]
+           },
+           "secureLevel": "1",
+           "exposeType": "inner",
+           "supportPublish": false
+       }   
+    }
+}
