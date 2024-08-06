@@ -1,13 +1,46 @@
-{
-    "bookList": {
-       "Test": {
+[
+    {
+       "Ryu,HyunSeok": {
           "topics":{
             "isOrdered": true,
-            "tables": ["Slam, ARC, MetaData, Kubernetes, Mobilex"]
+            "tables": ["ARC, OpenTable, CPS, Kubernetes"]
            },
            "secureLevel": "1",
            "exposeType": "inner",
            "supportPublish": false
        }   
-    }
-}
+    },
+    {
+        "SLAMs": {
+           "topics":{
+             "isOrdered": true,
+             "tables": ["Sensors, Camera, Lidar, GPS, IMU, Algorithms, ROS"]
+            },
+            "secureLevel": "1",
+            "exposeType": "inner",
+            "supportPublish": false
+        }   
+     },
+     {
+        "Interns": {
+           "topics":{
+             "isOrdered": true,
+             "tables": ["About-Lab, Mobilex, Kubernetes,  Learning"]
+            },
+            "secureLevel": "1",
+            "exposeType": "inner",
+            "supportPublish": false
+        }   
+     },
+     {
+        "Official": {
+           "topics":{
+             "isOrdered": true,
+             "tables": ["About, Services, Works, QuickStart, Docs"]
+            },
+            "secureLevel": "1",
+            "exposeType": "inner",
+            "supportPublish": true
+        }   
+     }
+]

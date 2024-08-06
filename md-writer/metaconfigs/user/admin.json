@@ -1,4 +1,26 @@
-{
-    "name": "admin",
-    "group": "admin"
-}
+[
+    {
+        "id": "dev-0",
+        "name": "dev",
+        "password": "password"
+    },
+    {
+        "id": "admin",
+        "name": "admin",
+        "password": "password"
+    },
+    {
+        "id": "tester-0",
+        "name": "tester",
+        "password": "password"
+    },    {
+        "id": "writer-0",
+        "name": "writer",
+        "password": "password"
+    },    {
+        "id": "reader-0",
+        "name": "reader",
+        "password": "password"
+    }
+    
+]
