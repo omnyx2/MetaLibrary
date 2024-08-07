@@ -1,6 +1,6 @@
 use serde_json::{Value, from_str};
 use std::fs::File;
-use std::io::{self, Read};
+use std::io::{self, Read, Write };
 use std::collections::HashMap;
 use std::fs;
 use std::collections::hash_map::Keys;
@@ -13,6 +13,30 @@ enum JsonType {
     Object(HashMap<String, Value>),
     Array(Vec<Value>),
     Other(Value),
+}
+
+
+fn read_json_file(file_path: &str) -> io::Result<Value> {
+    let mut file = File::open(file_path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    let json: Value = serde_json::from_str(&contents)?;
+    Ok(json)
+}
+
+fn write_json_file(file_path: &str, json: &Value) -> io::Result<()> {
+    let mut file = File::create(file_path)?;
+    let contents = serde_json::to_string_pretty(json)?;
+    file.write_all(contents.as_bytes())?;
+    Ok(())
+}
+
+fn update_start_script(json: &mut Value, new_command: &str) {
+    if let Some(scripts) = json.get_mut("scripts") {
+        if let Some(start) = scripts.get_mut("start") {
+            *start = Value::String(new_command.to_string());
+        }
+    }
 }
 
 fn readable_json(json_file_path: &str) -> io::Result<JsonType> {
@@ -57,7 +81,6 @@ fn install_packages(src: &String) {
         .output()
         .expect("Failed to execute command");
 }
-
 // fn sh_excute(src: &String) {
 //     println!("install npm packages  {src}/");
 //     let output0 = Command::new(format!("chmod"))
@@ -92,9 +115,11 @@ fn install_packages(src: &String) {
 // }
 
 fn main() -> io::Result<()> {
+    
     let json_path = "../metaconfigs/book/config.json";
     let template_docs_path = "../book-template";
-    let template_prefix = "../template-";
+    let template_prefix = "../library/books/book-";
+
     let mut paths_to_check: Vec<String> = vec![
         "../metaconfigs/book".into(),
         "../md-writer/metaconfigs/book".into(),
@@ -114,46 +139,39 @@ fn main() -> io::Result<()> {
         let src = Path::new(&template_docs_path);
         copy_dir(src, Path::new(missing_path));
         clean_up(missing_path);
-        install_packages(missing_path);
+        // install_packages(missing_path);
     } 
     //book generate
     for item in &books {
         for (key, value) in item {
-            let mut str_arr: Vec<String> = value["topics"]["tables"].unwrap()
-                .map(|topic| {
-                    // Convert the Value to a String
-                    assert!(!topic.is_array());
-                    // println!("{}", topic);
-                    // topic.unwrap()
-                    "topic".into()
-                })
-                .collect();
-            println!("{}",format!("{template_prefix}{key}/pages/"));
-            // emptyMkdirsMissing(&mut str_arr.unwrap(), format!("{template_prefix}{key}/pages/"));
+            let str_arr: Vec<String> =  serde_json::from_str(&serde_json::to_string(&value["topics"]["tables"]).unwrap()).unwrap();
+            // dbg![str_arr];
+            mkdirMissingFoldersInBooksList(str_arr, format!("{template_prefix}{key}/pages/"));
         }   
-    }
-  
-
-    // dbg![&missing_paths];
-
-    // let script_path = "initbook.sh";
-    // let script_directory = "../template-Official";
-    // env::set_current_dir(script_directory).expect("Failed to change directory");
- 
+    } 
     Ok(())
 }
 
-// // topics 전달이 되면 만듦
-// fn emptyMkdirsMissing(paths_to_check: &mut &Vec<String>, base_path: String) {
-//     // let mut missing_topic : Vec<String> = vec![];
-//     let missing_paths = checkDirs(&paths_to_check);
-//     for topic in &missing_paths {
-//         // let src = Path::new(&template_docs_path);
-//         let new_path: String =  format!("{base_path}/{topic}").to_string();
-//         &paths_to_check.push(new_path);
-//     }
-//     dbg![&paths_to_check];
-// }
+// topics 전달이 되면 만듦
+fn mkdirMissingFoldersInBooksList(book_list_to_check: Vec<String>, base_path: String) -> Vec<String> {
+    let mut missing_topic : Vec<String> = vec![];
+    for topic in &book_list_to_check {
+        // let src = Path::new(&template_docs_path);
+        let new_path: String =  format!("{base_path}{topic}").to_string();
+        missing_topic.push(new_path)
+    }
+    let folders_underpath = checkDirs(&missing_topic);
+    for missign_dir in &folders_underpath {
+        create_folder(&missign_dir);
+        println!("Create folder at {missign_dir}");
+    }
+    folders_underpath
+}
+
+fn create_folder(path: &str) -> io::Result<()> {
+    fs::create_dir_all(path)?;
+    Ok(())
+}
 
 
     //     if let Some(obj) = json.as_object() {
@@ -203,6 +221,7 @@ fn main() -> io::Result<()> {
 //     // book_list
 // }
 
+//  존재하지 않는 폴더의 리스트를 돌려준다. 입력은 폴더의 이름이 아니라 폴더의 경로가 주어져야 한다.
 fn checkDirs(paths_to_check: &Vec<String>) -> Vec<String> {
     let mut missing_paths: Vec<String> = vec![];
     for path_str in paths_to_check {
