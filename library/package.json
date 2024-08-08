@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "concurrently": "^8.2.2"
+  },
+  
+  "scripts": {
+    "watch-and-install": "node watch-and-install.js",
+    "watch-and-serve": "node watch-and-serve.js",
+    "watch-and-dev": "node watch-and-dev.js",
+    "watch-and-build": "node watch-and-build.js"
+    }
+}

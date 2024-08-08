@@ -4,10 +4,13 @@ import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import rehypeSanitize from "rehype-sanitize";
 import TitleHeader from '../components/TitleHeader'
+
+
 const MDEditor = dynamic(
   () => import("@uiw/react-md-editor").then(mod => mod.default),
   { ssr: false }
 )
+
 function isEnglish(text) {
   // This regex matches basic Latin characters, numbers, and common punctuation
   const englishRegex = /^[#| |A-Za-z0-9\s."-]+$/;
@@ -31,6 +34,8 @@ function checkTitleIsEnglish(value) {
   return isEnglish(title) && isInvolvedSpecialChar(title)
 }
 
+
+
 function MarkdownEditor({ value, setValue }) {
   function handleSetValue (value) {
     if(value[0] !== "#" ) {
@@ -43,6 +48,7 @@ function MarkdownEditor({ value, setValue }) {
     }
     setValue(value)
   }
+  
   return (
     <div data-color-mode="light" className="h-[90vh]"  >
       <TitleHeader title={getTitleOnly(value)} toggle={ value.split('\n').length > 1 }/>

@@ -5,6 +5,7 @@ import { addCommit, newCommit } from '@/utils/historyManager';
 import { createMarkdown, updateMarkdown, readMarkdowns, readMarkdown } from '@/utils/fsUtils/markdown';
 import { createArticle, updateArticle, readArticle, readArticles } from '@/utils/fsUtils/article';
 import { getFirstLineMax20Chars } from '@/utils/takeHeadersAsTitle'
+import { createMetaFile } from '@/utils/fsUtils/metadata';
 // export async function POST(request) {
 //   const data = await request.json();
 
@@ -17,26 +18,31 @@ import { getFirstLineMax20Chars } from '@/utils/takeHeadersAsTitle'
 
 // Create (POST)
 export async function POST(request) {
-  const { markdown } = await request.json();
-  const result0 = await getFirstLineMax20Chars(markdown);
- 
-  // Template 프로젝트에 파일을 넣어준다.
-  const result2 = await createArticle(result0.title, markdown);
-  if(result2.status === 409) {
-    return NextResponse.json({ message: 'Title is duplicated', title });
-  }
+
+  // 토큰 받아서 만드는 로직 만들것
+  const { bookTitle, topic, markdown } = await request.json();
   
+  // Template 프로젝트에 파일을 넣어준다.
   const result = await createMarkdown(markdown);
-  // const date = new Date().now().toString();
-  // 추후에 수정자 이름 넣는거 집어넣기
+  const result3 = await createMetaFile({ identifier: result.id, bookTitle, creator: "admin", markdown });
+  const result0 = await getFirstLineMax20Chars(markdown);
+  const result2 = await createArticle(bookTitle, topic, result0.title, markdown);
+
+  if(result2.status === 409) {
+    // d실패로 인해서 해당 로직으로 진입시 그전의 요소 전부 삭제하는 것 만들 것,
+    return NextResponse.json({ message: 'Topic is duplicated', topic: result0.topic});
+  }
+
   await newCommit(result.id, markdown, "New");
   return NextResponse.json({ message: 'Markdown created successfully!', id: result.id });
 }
 
 // Read (GET)
-export async function GET({ params }) {
+export async function GET(props) {
   try {
-      const { id } = params;
+     // 허허 뭔가 파씽이 갑자기 안되서 로우하게 조졌습니다.
+      const parsedUrl = new URL(props.url);
+      const id = parsedUrl.searchParams.get('id');
       const markdown = await readMarkdown(id);
       return NextResponse.json({ id, markdown });
   
@@ -47,7 +53,8 @@ export async function GET({ params }) {
 }
 
 export async function PUT(request) {
-    const { id, markdown } = await request.json();
+  
+    const { id, markdown, bookTitle, topic } = await request.json();
     const oldMarkdown = await readMarkdown(id);
 
     const histories = await addCommit(id, oldMarkdown.markdown, markdown, 'Test');
@@ -57,10 +64,10 @@ export async function PUT(request) {
     const title = await getFirstLineMax20Chars(markdown);
 
     if( oldTitle === title ) {
-      const result2 = await updateArticle(title, markdown);
+      const result2 = await updateArticle(bookTitle, topic, markdown);
     } else {
       const result0 = await getFirstLineMax20Chars(markdown);
-      const result2 = await createArticle(result0.title, markdown);
+      const result2 = await createArticle(bookTitle, topic, result0.title, markdown);
       if(result2.status === 409) {
         return NextResponse.json({ message: 'Title is duplicated', title });
       }

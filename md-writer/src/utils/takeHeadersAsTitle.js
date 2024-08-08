@@ -12,7 +12,7 @@ const sanitizeTitle = (title) => {
 };
 export const getFirstLineMax20Chars = async (content) => {
 
-    const firstLine = content.split('\n')[0];
+    const firstLine = content.split('\n')[0].slice(2,-1);
     const truncatedFirstLine = truncateAtWordBoundary(firstLine, 30);
     return { title:  sanitizeTitle(truncatedFirstLine), status: 200 };
 };

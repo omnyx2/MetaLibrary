@@ -1,9 +1,8 @@
 'use-client'
 import React, { useState, useEffect } from 'react';
 import MarkdownEditor from './MarkdownEditor';
-import ConfigSelector from '@/components/TopicSelector/TopicSelector';
 
-const MarkdownManager = ({articleId}) => {
+const MarkdownManager = ({bookTitle, topic, articleId}) => {
   const [markdowns, setMarkdowns] = useState([]);
   const [currentMarkdown, setCurrentMarkdown] = useState('# ');
   const [editId, setEditId] = useState(null);
@@ -40,7 +39,7 @@ const MarkdownManager = ({articleId}) => {
     const response = await fetch('/api/markdown', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ markdown: currentMarkdown }),
+      body: JSON.stringify({ markdown: currentMarkdown, bookTitle, topic }),
     });
     const result = await response.json();
     setMessage(result.message);
@@ -60,7 +59,7 @@ const MarkdownManager = ({articleId}) => {
     const response = await fetch('/api/markdown', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: editId, markdown: currentMarkdown }),
+      body: JSON.stringify({ id: editId, markdown: currentMarkdown, bookTitle, topic }),
     });
 
     const result = await response.json();
@@ -74,7 +73,7 @@ const MarkdownManager = ({articleId}) => {
     const response = await fetch('/api/markdown', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id, bookTitle, topic }),
     });
     const result = await response.json();
     setMessage(result.message);
@@ -99,8 +98,7 @@ const MarkdownManager = ({articleId}) => {
   return (
     <div>
        <form onSubmit={handleSubmit}>
-         <ConfigSelector configName="topics"/>
-        <MarkdownEditor value={currentMarkdown} setValue={setCurrentMarkdown} />
+         <MarkdownEditor value={currentMarkdown} setValue={setCurrentMarkdown} />
         <button type="submit">{editId ? '문서 생성' : 'Create'}</button>
       </form>
       {message && <p>{message}</p>}

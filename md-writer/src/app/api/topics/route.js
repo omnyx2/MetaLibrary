@@ -1,25 +1,20 @@
-// pages/api/config.js
 import { NextResponse } from 'next/server';
-import path from 'path'
-import fs from 'fs'
+import { getBookTopics } from '@/utils/checker/topics';
 
-export async function GET() {
-  const configPath = path.join(process.cwd(), 'public', 'topics/topicList.json');
-  const config = await fs.readJson(configPath);
 
+export async function GET(props) {
+  // Create a URL object
+  const parsedUrl = new URL(props.url);
+  // Get the value of the 'title' parameter
+  const title = parsedUrl.searchParams.get('title');
+
+  // const { booktitle } = params;
+  console.log(title)
+  const config = await getBookTopics(title);
+  console.log(title)
   if (!config) {
      return NextResponse.json({ message: 'Failed to save configuration' }, { status: 500 });
   }
 
-  return NextResponse.json({config: config}, { status: 200});
-}
-
-export async function POST(req) {
-  try {
-    const body = await req.json();
-    configState = body; // Save the configuration
-    return NextResponse.json({ message: 'Configuration saved successfully' });
-  } catch (error) {
-    return NextResponse.json({ message: 'Failed to save configuration' }, { status: 500 });
-  }
+  return NextResponse.json({topics: config}, { status: 200});
 }

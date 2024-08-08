@@ -3,11 +3,12 @@
        "Ryu,HyunSeok": {
           "topics":{
             "isOrdered": true,
-            "tables": ["ARC", "OpenTable", "CPS","Kubernetes"]
+            "tables": ["ARC", "OpenTable", "CPS","Kubernetes", "oneMore"]
            },
-           "secureLevel": "1",
+           "secureLevel": 1,
            "exposeType": "inner",
-           "supportPublish": false
+           "supportPublish": false,
+           "port": 3010
        }   
     },
     {
@@ -16,9 +17,10 @@
              "isOrdered": true,
              "tables": ["Sensors", "Camera", "Lidar", "GPS", "IMU", "Algorithms", "ROS"]
             },
-            "secureLevel": "1",
+            "secureLevel": 1,
             "exposeType": "inner",
-            "supportPublish": false
+            "supportPublish": false,
+            "port": 3011
         }   
      },
      {
@@ -27,9 +29,10 @@
            "isOrdered": true,
            "tables": ["Sensors", "Camera", "Lidar", "GPS", "IMU", "Algorithms", "ROS"]
           },
-          "secureLevel": "1",
+          "secureLevel": 1,
           "exposeType": "inner",
-          "supportPublish": false
+          "supportPublish": false,
+          "port": 3012
       }   
    },
      {
@@ -38,9 +41,10 @@
              "isOrdered": true,
              "tables": ["About-Lab", "Mobilex", "Kubernetes",  "Learning"]
             },
-            "secureLevel": "1",
+            "secureLevel": 1,
             "exposeType": "inner",
-            "supportPublish": false
+            "supportPublish": false,
+            "port": 3013
         }   
      },
      {
@@ -49,9 +53,10 @@
              "isOrdered": true,
              "tables": ["About", "Services", "Works", "QuickStart", "Docs"]
             },
-            "secureLevel": "1",
+            "secureLevel": 1,
             "exposeType": "inner",
-            "supportPublish": true
+            "supportPublish": true,
+            "port": 3014
         }   
      }
 ]

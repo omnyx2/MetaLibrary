@@ -1,62 +1,13 @@
-use serde_json::{Value, from_str};
-use std::fs::File;
-use std::io::{self, Read, Write };
-use std::collections::HashMap;
+mod supercommand;
+mod jsoneditor;
+mod blogthemeeditor;
+use serde_json::Value;
 use std::fs;
-use std::collections::hash_map::Keys;
+use std::io::{self};
+use std::collections::HashMap;
 use std::path::Path;
 use std::process::Command;
-use std::env;
-
-#[derive(Debug)]
-enum JsonType {
-    Object(HashMap<String, Value>),
-    Array(Vec<Value>),
-    Other(Value),
-}
-
-
-fn read_json_file(file_path: &str) -> io::Result<Value> {
-    let mut file = File::open(file_path)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    let json: Value = serde_json::from_str(&contents)?;
-    Ok(json)
-}
-
-fn write_json_file(file_path: &str, json: &Value) -> io::Result<()> {
-    let mut file = File::create(file_path)?;
-    let contents = serde_json::to_string_pretty(json)?;
-    file.write_all(contents.as_bytes())?;
-    Ok(())
-}
-
-fn update_start_script(json: &mut Value, new_command: &str) {
-    if let Some(scripts) = json.get_mut("scripts") {
-        if let Some(start) = scripts.get_mut("start") {
-            *start = Value::String(new_command.to_string());
-        }
-    }
-}
-
-fn readable_json(json_file_path: &str) -> io::Result<JsonType> {
-    // Read the JSON file
-    let mut file = File::open(json_file_path)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-
-    // Parse the JSON content
-    let json: Value = from_str(&contents)?;
-
-    // Determine the type of JSON and convert accordingly
-    if let Some(obj) = json.as_object() {
-        Ok(JsonType::Object(obj.clone().into_iter().collect()))
-    } else if let Some(arr) = json.as_array() {
-        Ok(JsonType::Array(arr.clone()))
-    } else {
-        Ok(JsonType::Other(json))
-    }
-}
+// use std::env;
 
 fn clean_up(src: &String) {
     // println!("{src}");
@@ -67,20 +18,13 @@ fn clean_up(src: &String) {
     //     .expect("ls command failed to start");
     // dbg![output];
     println!(" remove un nesrray file  {src}/node_modules");
-    let output = Command::new(format!("rm"))
+    let _output = Command::new(format!("rm"))
         .arg("-rf")
         .arg(format!("{src}/node_modules"))
         .output()
         .expect("Failed to execute command");
 }
-fn install_packages(src: &String) {
-    println!("install npm packages  {src}");
-    let output = Command::new(format!("npx"))
-        .arg(format!("--prefix={src}"))
-        .arg("npm install")
-        .output()
-        .expect("Failed to execute command");
-}
+ 
 // fn sh_excute(src: &String) {
 //     println!("install npm packages  {src}/");
 //     let output0 = Command::new(format!("chmod"))
@@ -114,6 +58,8 @@ fn install_packages(src: &String) {
 //     // }
 // }
 
+
+
 fn main() -> io::Result<()> {
     
     let json_path = "../metaconfigs/book/config.json";
@@ -125,44 +71,76 @@ fn main() -> io::Result<()> {
         "../md-writer/metaconfigs/book".into(),
         // Add more paths as needed
     ];
+    
+    // 초기의 book shele에 대한 메타데이터를 읽어서 이를 저장하고 관리할 계획이다.
     let json: &str = &fs::read_to_string(&json_path).expect("Unable to read file");
     let books: Vec<HashMap<&str, Value>> = serde_json::from_str(json)?;
     for  item in &books {
-        for (key, value) in item {
-            let newPath: String =  format!("{template_prefix}{key}").to_string();
-            &paths_to_check.push(newPath);
+        for (key, _value) in item {
+            let new_path: String =  format!("{template_prefix}{key}").to_string();
+            let _ = &paths_to_check.push(new_path);
         }     
     }
+    // 아래의 모든 요소는 초기화로부터 구동된다.
+    // book template로 부터 책을 생성한다. 이는 초기화에서만 구동한다.
     // dbg![&paths_to_check];
-    let missing_paths = checkDirs(&paths_to_check);
+    let missing_paths = check_dirs(&paths_to_check);
     for missing_path in &missing_paths {
         let src = Path::new(&template_docs_path);
-        copy_dir(src, Path::new(missing_path));
-        clean_up(missing_path);
+        let _ = copy_dir(src, Path::new(missing_path));
+        let _ =clean_up(missing_path);
         // install_packages(missing_path);
-    } 
-    //book generate
+    }
+
+    // libraray의 books의 pages 폴더 아래에 book를 생성하고 관리한다.
     for item in &books {
-        for (key, value) in item {
-            let str_arr: Vec<String> =  serde_json::from_str(&serde_json::to_string(&value["topics"]["tables"]).unwrap()).unwrap();
-            // dbg![str_arr];
-            mkdirMissingFoldersInBooksList(str_arr, format!("{template_prefix}{key}/pages/"));
+        for (key, _value) in item {
+            let str_arr: Vec<String> =  serde_json::from_str(&serde_json::to_string(&_value["topics"]["tables"]).unwrap()).unwrap();
+            let _ = mkdir_missing_folders_in_books_list(str_arr, format!("{template_prefix}{key}/pages/"));
         }   
-    } 
+    }
+
+    // book의 생성이 완료되었다면 book을 배포할 port를 할당한다.
+    for item in &books {
+        for (key, _value) in item {
+            let new_path: String =  format!("{template_prefix}{key}/package.json").to_string();
+            let port: i32 =  serde_json::from_str(&serde_json::to_string(&_value["port"]).unwrap()).unwrap();
+
+            // Read the JSON file
+            let mut json = jsoneditor::read_json_file(&new_path)?;
+            
+            // Update the "start" script
+            let _ = jsoneditor::update_start_script(&mut json, &format!("next start -p {port}"));
+
+            // Write the updated JSON back to the file
+            let _ = jsoneditor::write_json_file(&new_path, &json)?;
+         }   
+    }
+
+    for item in &books {
+        for (key, _value) in item {
+            let file_path = format!("{template_prefix}{key}/theme.config.tsx"); // Replace with the actual path to your JS file
+            blogthemeeditor::replace_string_in_file(&file_path, "DUM_DEV", key)?;
+         }   
+    }
+
+ 
     Ok(())
 }
 
+
+
 // topics 전달이 되면 만듦
-fn mkdirMissingFoldersInBooksList(book_list_to_check: Vec<String>, base_path: String) -> Vec<String> {
+fn mkdir_missing_folders_in_books_list(book_list_to_check: Vec<String>, base_path: String) -> Vec<String> {
     let mut missing_topic : Vec<String> = vec![];
     for topic in &book_list_to_check {
         // let src = Path::new(&template_docs_path);
         let new_path: String =  format!("{base_path}{topic}").to_string();
         missing_topic.push(new_path)
     }
-    let folders_underpath = checkDirs(&missing_topic);
+    let folders_underpath = check_dirs(&missing_topic);
     for missign_dir in &folders_underpath {
-        create_folder(&missign_dir);
+        let _ = create_folder(&missign_dir);
         println!("Create folder at {missign_dir}");
     }
     folders_underpath
@@ -191,7 +169,7 @@ fn create_folder(path: &str) -> io::Result<()> {
 //     // getBookListFromJson(json.clone());
 //     let print_json: String = serde_json::to_string_pretty(&json).unwrap();
 //     // println!("{:?}",array);
-//     // checkDirs(paths_to_check);
+//     // check_dirs(paths_to_check);
 //     Ok(())
 // }
 
@@ -222,7 +200,7 @@ fn create_folder(path: &str) -> io::Result<()> {
 // }
 
 //  존재하지 않는 폴더의 리스트를 돌려준다. 입력은 폴더의 이름이 아니라 폴더의 경로가 주어져야 한다.
-fn checkDirs(paths_to_check: &Vec<String>) -> Vec<String> {
+fn check_dirs(paths_to_check: &Vec<String>) -> Vec<String> {
     let mut missing_paths: Vec<String> = vec![];
     for path_str in paths_to_check {
         let path = Path::new(&path_str);
@@ -333,3 +311,5 @@ fn copy_dir(src: &Path, dst: &Path) -> io::Result<()> {
     }
     Ok(())
 }
+
+ 

@@ -1,0 +1,20 @@
+{
+  "devAdmin": {
+    "accessLevel": 0,
+    "userList": [
+      "dev-0"
+    ]
+  },
+  "admin": {
+    "accessLevel": 1,
+    "userList": [
+      "admin"
+    ]
+  },
+  "reviewer": {
+    "accessLevel": 1,
+    "userList": [
+      "reader-0","writer-0","reader-0"
+    ]
+  }
+}

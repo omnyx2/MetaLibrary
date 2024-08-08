@@ -1,0 +1,54 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #e7e7e7;
+    background-color: white;
+  }
+  
+  /* Add this class to make the header sticky */
+  .stickyHeader {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    width: 100%;
+    background-color: white;
+  }
+  
+  @media print {
+    .stickyHeader {
+      display: none;
+    }
+  }
+  
+  .left, .middle, .right {
+    flex: 1;
+  }
+  
+  .logo {
+    max-height: 50px;
+  }
+  
+  .middle {
+    text-align: center;
+  }
+  
+  .topicSelector {
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    color: black;
+  }
+  
+  .right {
+    text-align: right;
+  }
+  
+  .homeLink {
+    text-decoration: none;
+    color: #0070f3;
+  }
+  

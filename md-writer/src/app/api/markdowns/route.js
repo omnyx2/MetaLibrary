@@ -1,7 +1,7 @@
 
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { createMarkdown, updateMarkdown, readMarkdownDOIs } from '@/utils/fsUtils/markdown';
+import { createMarkdown, updateMarkdown, readMarkdowns } from '@/utils/fsUtils/markdown';
 
 // export async function POST(request) {
 //   const data = await request.json();
@@ -22,30 +22,9 @@ export async function POST(request) {
 
 // Read (GET)
 export async function GET() {
-  const markdowns = await readMarkdownDOIs();
+  const markdowns = await readMarkdowns();
+  // console.log(markdowns)
   return NextResponse.json(markdowns);
-}
-
-export async function PUT(request) {
-    const { id, markdown } = await request.json();
-    console.log(id);
-    const markdowns = await readMarkdowns();
-    // console.log(markdowns);
-    const index = markdowns.findIndex((item) => {
-      console.log(item);
-      return item.id === id
-    });
-    console.log("index",index)
-    if (index !== -1) {
-        markdowns[index].markdown = markdown;
-        return NextResponse.json({ message: 'Markdown updated successfully!' });
-    }
-
-    const result = await updateMarkdown(id, markdown);
-    if (result.status === 404) {
-      return NextResponse.json(result, { status: 404 });
-    }
-    return NextResponse.json(result);
 }
 
 // Delete (DELETE)

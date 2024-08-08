@@ -1,0 +1,7 @@
+{
+    "ARTICLE_FILE_PATH": "public/articles/",
+    "META_FILE_PATH": "public/metadata_article/",
+    "HISTORY_DIR_PATH": "public/history",
+    "ARTICLE_POSTFIX": ".mdx",
+    "HISTORY_POSTFIX": ".json"
+}
