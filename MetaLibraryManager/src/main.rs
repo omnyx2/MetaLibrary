@@ -63,6 +63,7 @@ fn clean_up(src: &String) {
 fn main() -> io::Result<()> {
     
     let json_path = "../metaconfigs/book/config.json";
+    let meta_data_path = "../md-writer/public/metadata_articles";
     let template_docs_path = "../book-template";
     let template_prefix = "../library/books/book-";
 
@@ -106,7 +107,7 @@ fn main() -> io::Result<()> {
             let new_path: String =  format!("{template_prefix}{key}/package.json").to_string();
             let port: i32 =  serde_json::from_str(&serde_json::to_string(&_value["port"]).unwrap()).unwrap();
 
-            // Read the JSON file
+            // Read the JON file
             let mut json = jsoneditor::read_json_file(&new_path)?;
             
             // Update the "start" script
@@ -124,11 +125,13 @@ fn main() -> io::Result<()> {
          }   
     }
 
- 
+    select_proper_page_to_book(Path::new(meta_data_path),"bookTitle",book_id_to_mdx);
     Ok(())
 }
 
-
+fn book_id_to_mdx(id: String) -> String {
+    format!("{id}.mdx")
+}
 
 // topics 전달이 되면 만듦
 fn mkdir_missing_folders_in_books_list(book_list_to_check: Vec<String>, base_path: String) -> Vec<String> {
@@ -312,4 +315,27 @@ fn copy_dir(src: &Path, dst: &Path) -> io::Result<()> {
     Ok(())
 }
 
+// 결국 해야하는 것은 메타데이터쪽을 읽어들이고, 파일의 메타데이터 특성에 따라 분류하여
+// 배열을 반환하는 로직을 구성하는 것
+
+// 여기서 핵심은 어떤 함수를 어떤 절차로 어떻게 구성하는지를 결정하는 방법이 Meta Data를 
+// 다루기 위한 & 이해하기 위한  핵심이 될 듯하.
+fn select_proper_page_to_book(
+    meta_data_path: &Path, 
+    collect_condition: &str,
+    process_result: fn(String) -> String ) {
+
+    let paths = fs::read_dir(meta_data_path).unwrap();
+    for meta_data_file in paths {
+        // dbg![meta_data_file];
+        let json: &str = &fs::read_to_string(Path::new(&meta_data_file.unwrap().path())).expect("Unable to read file");
+        //let meta_data: Value = serde_json::from_str(json).unwrap();
+        let meta_data = serde_json::json!(json);
+        let main_d: &str = &meta_data[collect_condition].as_str().unwrap();
+        let pro_d: &str = &process_result(main_d.into());
+        dbg![&pro_d];
+        dbg![&meta_data[collect_condition]];
+        dbg!["hi"];
+    }
+}
  
