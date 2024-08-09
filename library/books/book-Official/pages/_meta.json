@@ -1,8 +1,6 @@
 {
   "index": "Introduction",
   "another": "Another Page",
-  "advanced": "Advanced (A Folder)",
-  "arc": "Arc",
   "about": {
     "title": "About",
     "type": "page"

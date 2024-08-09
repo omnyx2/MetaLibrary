@@ -1,9 +1,11 @@
 mod supercommand;
 mod jsoneditor;
 mod blogthemeeditor;
+mod metaformat_article;
+  
 use serde_json::Value;
-use std::fs;
-use std::io::{self};
+use std::fs::{self, File};
+use std::io::{self, BufReader, Read};
 use std::collections::HashMap;
 use std::path::Path;
 use std::process::Command;
@@ -64,6 +66,8 @@ fn main() -> io::Result<()> {
     
     let json_path = "../metaconfigs/book/config.json";
     let meta_data_path = "../md-writer/public/metadata_articles";
+    let article_path = "../md-writer/public/articles";
+    let book_article_path = "pages/";
     let template_docs_path = "../book-template";
     let template_prefix = "../library/books/book-";
 
@@ -125,7 +129,19 @@ fn main() -> io::Result<()> {
          }   
     }
 
-    select_proper_page_to_book(Path::new(meta_data_path),"bookTitle",book_id_to_mdx);
+    let mata_data_of_articles = read_dict_json_files_from_directory(&meta_data_path).unwrap();
+    let bookpages = construct_meta_data(mata_data_of_articles);
+    for (key, _value) in &bookpages {
+        for page in _value {
+            
+            let src_str = format!("{article_path}/{}.mdx",page.getId());
+            let file_str = format!("{template_prefix}{key}/{book_article_path}{}/{}.mdx", page.getTopic(), page.getTitle()); // Replace with the actual path to your JS file
+            let src_path = Path::new(&src_str);
+            let file_path = Path::new(&file_str);
+
+            let _ = copy_file(src_path, file_path);
+        }
+    }
     Ok(())
 }
 
@@ -154,54 +170,6 @@ fn create_folder(path: &str) -> io::Result<()> {
     Ok(())
 }
 
-
-    //     if let Some(obj) = json.as_object() {
-//         Ok(obj.clone().into_iter().collect())
-//     }
-//     let mut lookup: HashMap<String, Value> = serde_json::from_str(json).unwrap();
-
-//     println!("{:?}", lookup);
-//     // let huhu: HashMap<String,Value> = json[0].clone().as_object().unwrap().clone();
-//     // assert_eq!(*library.get("1").unwrap(), json!(65));
-
-//     // let Some(jarray)  = json.as_array() else { todo!() };
-//     // let book_list: Vec<&str> = getBookListFromJson(json.clone());
-//     // let dict_arr = json[0].as_object().unwrap();
-//     // println!("{:?}");
-
-//     // getBookListFromJson(json.clone());
-//     let print_json: String = serde_json::to_string_pretty(&json).unwrap();
-//     // println!("{:?}",array);
-//     // check_dirs(paths_to_check);
-//     Ok(())
-// }
-
-// fn json_to_hashmap(json: &str, keys: Vec<&str>) -> Result<HashMap<String, Value>> {
-//     let mut lookup: HashMap<String, Value> = serde_json::from_str(json).unwrap();
-//     let mut map = HashMap::new();
-//     for key in keys {
-//         let (k, v) = lookup.remove_entry (key).unwrap();
-//         map.insert(k, v);
-//     }
-//     Ok(map)
-
-
-// fn getBookListFromDictArray(dict_array: Value)   {
-//     let mut book_list: Vec<&str> = vec![];
-//     let i = 0;
-
-//     // loop {
-//     //     // let (key, value): (std::string::String, Value) = dict_arr[i];
-//     //     println!("{:?} : {:?}",key,value.as_u64().unwrap());
-//     //     // book_list.push(&key);
-//     //     if i > dict_arr.len() {
-//     //         break;
-//     //     }
-//     // }   
-//     // book_list
-//     // book_list
-// }
-
 //  존재하지 않는 폴더의 리스트를 돌려준다. 입력은 폴더의 이름이 아니라 폴더의 경로가 주어져야 한다.
 fn check_dirs(paths_to_check: &Vec<String>) -> Vec<String> {
     let mut missing_paths: Vec<String> = vec![];
@@ -217,84 +185,6 @@ fn check_dirs(paths_to_check: &Vec<String>) -> Vec<String> {
     }
     missing_paths
 }
-
-// fn readJson(json_file_path: &str) -> Result<Value, Error> {
-//     // Read the JSON file
-//     let mut temp: String = json_file_path.into();
-//     let mut contents = fs::read_to_string(&mut temp).unwrap();
-//     // Parse the JSON content
-//     let json: Value = from_str(&contents).unwrap();
-//     Ok(json)
-// }
-
-// fn isJsonArray(json:Value) -> Result<Value, Error> {
-//     if let Some(array) = json.as_array() {
-//         Ok(json)
-//     } else {
-//         println!("The JSON content is not an array.");
-//         Err(Error)
-//      }
-// }
-
-// // fn findMissing(target: Vec<Value>, checker: Vec<&str>) -> Result<Vec<&str>, Error> {  
-// //     // Check for the keys in the array
-    
-// //     for (index, item) in target.iter().enumerate() {
-// //         if let Some(obj) = item.as_object() {
-// //             let missing_keys: Vec<&str> = checker.iter()
-// //                 .filter(|&&key| !obj.contains_key(key))
-// //                 .copied()
-// //                 .collect();
-// //             if missing_keys.is_empty() {
-// //                 println!("Object at index {} contains all keys.", index);
-// //                 return Ok(missing_keys);
-// //             } else {
-// //                 println!("Object at index {} is missing keys: {:?}", index, missing_keys);
-// //                 return Ok(missing_keys);
-// //             }
-// //         } else {
-// //             println!("Item at index {} is not an object: {:?}", index, item);
-// //         }
-// //     }
-// //     return Ok([""]);
-// // }
-
-// // fn callPath() -> vec!<String> {
-// //     return [];
-// // }
-
-// // fn checkJsonAndDo(json_path: &Path, check_method: i32) -> io::Result<(), Err> {
-
-// //     let template_json_path = json_path;
-// //     let key_to_check = "specific_key";
-
-// //     for json_path_str in json_paths_to_check {
-// //         let json_path = Path::new(json_path_str);
-// //         if !json_path.exists() {
-// //             println!("JSON file {:?} does not exist. Something Wrong..", json_path);
-// //             return Err(())
-// //         } else {
-// //             let mut file = fs::File::open(json_path)?;
-// //             let mut contents = String::new();
-// //             file.read_to_string(&mut contents)?;
-
-// //             let json: Value = from_str(&contents)?;
-// //             if let Some(array) = json.as_array() {
-// //                 if !array.iter().any(|item| item.as_object().map_or(false, |obj| obj.contains_key(key_to_check))) {
-// //                     println!("Key '{}' not found in any object of {:?}. Copying template...", key_to_check, json_path);
-// //                     // fs::copy(template_json_path, json_path)?;
-// //                 } else {
-// //                     println!("Key '{}' exists in at least one object of {:?}.", key_to_check, json_path);
-// //                 }
-// //             } else {
-// //                 println!("JSON in {:?} is not an array. Copying template...", json_path);
-// //                 // fs::copy(template_json_path, json_path)?;
-// //             }
-// //         }
-// //     }
-
-// //     Ok(())
-// // }
 
 fn copy_dir(src: &Path, dst: &Path) -> io::Result<()> {
     if !dst.exists() {
@@ -320,22 +210,76 @@ fn copy_dir(src: &Path, dst: &Path) -> io::Result<()> {
 
 // 여기서 핵심은 어떤 함수를 어떤 절차로 어떻게 구성하는지를 결정하는 방법이 Meta Data를 
 // 다루기 위한 & 이해하기 위한  핵심이 될 듯하.
-fn select_proper_page_to_book(
-    meta_data_path: &Path, 
-    collect_condition: &str,
-    process_result: fn(String) -> String ) {
+fn read_dict_json_files_from_directory(directory: &str) -> Result<Vec<metaformat_article::ArticleMetaData>, Box<dyn std::error::Error>> {
+    let mut metadata_list = Vec::new();
 
-    let paths = fs::read_dir(meta_data_path).unwrap();
-    for meta_data_file in paths {
-        // dbg![meta_data_file];
-        let json: &str = &fs::read_to_string(Path::new(&meta_data_file.unwrap().path())).expect("Unable to read file");
-        //let meta_data: Value = serde_json::from_str(json).unwrap();
-        let meta_data = serde_json::json!(json);
-        let main_d: &str = &meta_data[collect_condition].as_str().unwrap();
-        let pro_d: &str = &process_result(main_d.into());
-        dbg![&pro_d];
-        dbg![&meta_data[collect_condition]];
-        dbg!["hi"];
+    for entry in fs::read_dir(directory)? {
+        let entry = entry?;
+        let path = entry.path();
+
+        if path.is_file() && path.extension().map_or(false, |ext| ext == "json") {
+            let file = File::open(&path)?;
+            let reader = BufReader::new(file);
+            let metadata: metaformat_article::ArticleMetaData = serde_json::from_reader(reader)?;
+            metadata_list.push(metadata);
+        }
     }
+
+    Ok(metadata_list)
 }
+
+fn construct_meta_data(files: Vec<metaformat_article::ArticleMetaData>) -> HashMap<String, Vec<metaformat_article::ArticleMetaData>> {
+    let mut classified_files: HashMap<String, Vec<metaformat_article::ArticleMetaData>> = HashMap::new();
+
+    for file in files {
+        classified_files
+            .entry(file.bookTitle.clone())
+            .or_insert_with(Vec::new)
+            .push(file);
+    }
+    classified_files
+}
+
+fn replace_spaces_with_hyphens(input: &str) -> String {
+    input.replace(' ', "-")
+}
+
+fn copy_file(src: &Path, dst: &Path) -> io::Result<()> {
+    // 경로체크는 없다 경로 체크를 해야한다면 에러를 터트려라
+    if !src.exists() {
+        return Err(io::Error::new(io::ErrorKind::NotFound, "Source file does not exist"));
+    }
+
+    // Check if the entry is a file
+    if src.is_file() {
+        if file_contents_are_different(&src, &dst)? || !dst.exists() {
+            fs::copy(&src, &dst)?;
+            dbg!("Copying articles from meta data: { } : { }", src, dst );
+        }
+    }
+    Ok(())
+}
+
+fn file_contents_are_different(src: &Path, dst: &Path) -> io::Result<bool> {
+    // Check if destination file exists
+    if !dst.exists() {
+        return Ok(true); // If the destination file does not exist, they are different
+    }
+
+    // Open source and destination files
+    let mut src_file = fs::File::open(src)?;
+    let mut dst_file = fs::File::open(dst)?;
+
+    let mut src_contents = Vec::new();
+    let mut dst_contents = Vec::new();
+
+    // Read contents of the source file
+    src_file.read_to_end(&mut src_contents)?;
+    // Read contents of the destination file
+    dst_file.read_to_end(&mut dst_contents)?;
+
+    // Compare the contents
+    Ok(src_contents != dst_contents)
+}
+
  

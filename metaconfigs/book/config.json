@@ -58,5 +58,17 @@
             "supportPublish": true,
             "port": 3014
         }   
-     }
+     },
+     {
+      "Niki": {
+         "topics":{
+           "isOrdered": true,
+           "tables": ["ROS", "IsaacSim", "Lidar"]
+          },
+          "secureLevel": 1,
+          "exposeType": "inner",
+          "supportPublish": true,
+          "port": 3015
+      }   
+   }
 ]

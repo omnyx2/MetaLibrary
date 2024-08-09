@@ -21,16 +21,17 @@ export async function POST(request) {
 
   // 토큰 받아서 만드는 로직 만들것
   const { bookTitle, topic, markdown } = await request.json();
-  
+  if( !(bookTitle && topic && markdown)) {
+    return NextResponse.json({ message: 'Please choose Book Title, Topic, Write Markdown in it.'}, {status:403});
+  }
   // Template 프로젝트에 파일을 넣어준다.
   const result = await createMarkdown(markdown);
-  const result3 = await createMetaFile({ identifier: result.id, bookTitle, creator: "admin", markdown });
+  const result3 = await createMetaFile({ identifier: result.id, bookTitle, topic, creator: "admin", markdown });
   const result0 = await getFirstLineMax20Chars(markdown);
   const result2 = await createArticle(bookTitle, topic, result0.title, markdown);
 
   if(result2.status === 409) {
     // d실패로 인해서 해당 로직으로 진입시 그전의 요소 전부 삭제하는 것 만들 것,
-    return NextResponse.json({ message: 'Topic is duplicated', topic: result0.topic});
   }
 
   await newCommit(result.id, markdown, "New");

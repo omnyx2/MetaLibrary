@@ -36,7 +36,7 @@ const metaDataGen_v_0 = (v, creator, identifier, bookTitle) => ({
 })
 
 // Define the Dublin Core format
-const dublinCoreFormat = {
+const dublinCorePageFormat = {
     title: "",
     creator: "",
     subject: "",
@@ -44,19 +44,20 @@ const dublinCoreFormat = {
     publisher: "",
     contributor: "",
     date: "",
-    type: "",
+    bookType: "",
     format: "",
     identifier: "",
     source: "",
     language: "",
     relation: "",
     coverage: "",
-    rights: ""  
+    rights: "",
+    topic:""
 };
 
 // Function to create metadata for an MDX file and output it as JSON
-export const createBookMetaData = ({ identifier, creator, markdown, bookTitle }) => {
+export const createBookMetaData = ({ identifier, creator, markdown, topic, bookTitle }) => {
     const metadata = metaDataGen_v_0(markdown, creator, identifier, bookTitle);
-    return { ...dublinCoreFormat, ...metadata };
+    return { ...dublinCorePageFormat, ...metadata };
  
 };
