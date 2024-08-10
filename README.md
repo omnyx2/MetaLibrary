@@ -32,3 +32,8 @@ it's basically use markdown editor. when you choose the book and the topic of bo
 
 # Lisence 
 All lisence is belong to me as 
+
+// update시 타이틀 공백 수정 필요함.
+// update시 commit로직빠짐 해당 로직 채울것,
+// update 실패시 롤백 로직 없음
+// create 실패시 클린업 로직 만들것
