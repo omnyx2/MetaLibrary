@@ -89,15 +89,18 @@ export async function updateFile(filePath, data) {
   try {
     fs.writeFileSync(await checkFile(filePath), data);
     console.log(`File updated successfully: ${filePath}`);
+    return { status: 200}
   } catch (err) {
     console.error(`Error updating file: ${err}`);
+    return { status: 403}
+
   }
 }
 
 // making
 export async function deleteFile(filePath) {
   try {
-    fs.writeFileSync(await checkFile(filePath), data);
+    fs.deleteFile(await checkFile(filePath));
     console.log(`File updated successfully: ${filePath}`);
   } catch (err) {
     console.error(`Error updating file: ${err}`);

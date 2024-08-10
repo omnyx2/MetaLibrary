@@ -22,11 +22,16 @@ pub fn update_start_script(json: &mut Value, new_command: &str) {
         if let Some(start) = scripts.get_mut("start") {
             *start = Value::String(new_command.to_string());
         }
+    }
+}
+pub fn update_dev_script(json: &mut Value, new_command: &str) {
+    if let Some(scripts) = json.get_mut("scripts") {
         if let Some(start) = scripts.get_mut("dev") {
             *start = Value::String(new_command.to_string());
         }
     }
 }
+
 
 // //참고하기에 좋은 json enum 사용방식(공부용)
 // fn readable_json(json_file_path: &str) -> io::Result<JsonType> {

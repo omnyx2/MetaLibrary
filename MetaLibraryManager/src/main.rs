@@ -116,6 +116,7 @@ fn main() -> io::Result<()> {
             
             // Update the "start" script
             let _ = jsoneditor::update_start_script(&mut json, &format!("next start -p {port}"));
+            let _ = jsoneditor::update_dev_script(&mut json, &format!("next dev -p {port}"));
 
             // Write the updated JSON back to the file
             let _ = jsoneditor::write_json_file(&new_path, &json)?;

@@ -25,7 +25,7 @@
   },
   "scripts": {
     "build": "next build",
-    "dev": "next start -p 3014",
+    "dev": "next dev -p 3014",
     "start": "next start -p 3014"
   },
   "version": "0.0.1"

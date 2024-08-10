@@ -1,11 +1,13 @@
 
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
+import { pipe } from '@/utils/pipe/pipe'
 import { addCommit, newCommit } from '@/utils/historyManager';
-import { createMarkdown, updateMarkdown, readMarkdowns, readMarkdown } from '@/utils/fsUtils/markdown';
-import { createArticle, updateArticle, readArticle, readArticles } from '@/utils/fsUtils/article';
+import { createMarkdown, updateMarkdownPipe, readMarkdowns, readMarkdown } from '@/utils/fsUtils/markdown';
+import { createArticle, updateArticlePipe, readArticle, readArticles } from '@/utils/fsUtils/article';
 import { getFirstLineMax20Chars } from '@/utils/takeHeadersAsTitle'
-import { createMetaFile } from '@/utils/fsUtils/metadata';
+import { createMetaFile, readMetaData } from '@/utils/fsUtils/metadata';
+import { updateBookMetaDataPipe, saveMetaDataPipe } from '@/metacatologknologe/metafunctions'
 // export async function POST(request) {
 //   const data = await request.json();
 
@@ -21,6 +23,7 @@ export async function POST(request) {
 
   // 토큰 받아서 만드는 로직 만들것
   const { bookTitle, topic, markdown } = await request.json();
+  console.log(topic)
   if( !(bookTitle && topic && markdown)) {
     return NextResponse.json({ message: 'Please choose Book Title, Topic, Write Markdown in it.'}, {status:403});
   }
@@ -30,8 +33,9 @@ export async function POST(request) {
   const result0 = await getFirstLineMax20Chars(markdown);
   const result2 = await createArticle(bookTitle, topic, result0.title, markdown);
 
-  if(result2.status === 409) {
+  if(result2.status === 409 || result.status !==200) {
     // d실패로 인해서 해당 로직으로 진입시 그전의 요소 전부 삭제하는 것 만들 것,
+    NextResponse.json({ message: 'Markdown created failed!', id: result.id }, {status: 403});
   }
 
   await newCommit(result.id, markdown, "New");
@@ -53,42 +57,7 @@ export async function GET(props) {
   }
 }
 
-export async function PUT(request) {
-  
-    const { id, markdown, bookTitle, topic } = await request.json();
-    const oldMarkdown = await readMarkdown(id);
 
-    const histories = await addCommit(id, oldMarkdown.markdown, markdown, 'Test');
-    const result = await updateMarkdown(id, markdown);
-
-    const oldTitle = await getFirstLineMax20Chars(oldMarkdown.markdown);
-    const title = await getFirstLineMax20Chars(markdown);
-
-    if( oldTitle === title ) {
-      const result2 = await updateArticle(bookTitle, topic, markdown);
-    } else {
-      const result0 = await getFirstLineMax20Chars(markdown);
-      const result2 = await createArticle(bookTitle, topic, result0.title, markdown);
-      if(result2.status === 409) {
-        return NextResponse.json({ message: 'Title is duplicated', title });
-      }
-    }
-    // else {
-      
-      // deleteArticle(title);
-    // }
-
-    
-
-    if (result.status === 404) {
-      return NextResponse.json(result, { status: 404 });
-    }
-    if (histories.status !== 404) {
-      return NextResponse.json({ message: 'Markdown & history updated successfully!' });
-    }
-
-    return NextResponse.json(result);  
-}
 
 // Delete (DELETE)
 export async function DELETE(request) {
@@ -96,3 +65,65 @@ export async function DELETE(request) {
   markdowns = markdowns.filter((item) => item.id !== id);
   return NextResponse.json({ message: 'Markdown deleted successfully!' });
 }
+
+
+export async function PUT(request) {
+  try {
+    const { id, markdown, username } = await request.json();
+    const processedData = await pipe(
+      findMetaDataFromIdPipe,
+      updateBookMetaDataPipe,
+      saveMetaDataPipe,
+      updateMarkdownPipe,
+      updateArticlePipe,
+      // Add more processing functions as needed
+    )({
+      identifier: id,
+      markdown,
+      username
+    });
+    const { bookTitle, topic, title, identifier } = processedData.newMetadata
+    const message = `Succesfully updated the post!${ bookTitle}/${topic+"/"+ title} \n ${id} \n ${identifier}`
+    console.log(message)
+    if(processedData.result.status === 200) {
+      return NextResponse.json({ message },{status:200});
+    } else {
+      return NextResponse.json(
+        { success: false, error: 'Failed to update article' },
+        { status: 500 }
+      );
+    }
+    // const updatedArticle = await processUpdate(req);
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: 'Failed to update article' },
+      { status: 500 }
+    );
+  }
+}
+
+const findMetaDataFromIdPipe = async (props) => {
+  try {
+    if(props.result.status !== 200) throw Error("Error Found before findMetaDataFromId")
+    const { identifier } = props;
+    const oldMetadata = await readMetaData({ identifier })
+    return {
+      ...props,
+      metadata: oldMetadata.status === 200? oldMetadata.data : undefined,
+      result: {
+        message: "Successfully Found Metadata from id",
+        status: 200
+      }
+    }
+  } catch(err) {
+    console.error(err, props)
+    return {
+      ...props,
+      result: {
+        message: "Fail to Found Metadata from id",
+        status: 403
+      }
+    }
+  }
+}
+

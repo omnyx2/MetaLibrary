@@ -39,10 +39,11 @@ export const readMarkdownlist = async () => {
 export const createMarkdown = async (markdown) => {
   const id = uuidv4();
   try {
-    await createFile(makeArticlePath({arg: id, POSTFIX:DIR.MDXDOWN_POSTFIX}), markdown);   
+    const path = await makeArticlePath({arg: id, POSTFIX:DIR.MDXDOWN_POSTFIX})
+    await createFile(path, markdown);   
     return { message: 'Markdown created successfully!', id };
-  } catch {
-    console.log(`Error: at Creating MarkDown, ${id}`)
+  } catch(err) {
+    console.error(`Error: at Creating MarkDown, ${id} ${err}`)
     return { message: 'Error Creating markdown file', status: 409}
   }
 };
@@ -51,7 +52,8 @@ export const readMarkdown = async (id) => {
   try {
       return { 
         message: 'Found markdown file', 
-        markdown: await readFile(makeArticlePath({arg: id, POSTFIX: DIR.MDXDOWN_POSTFIX}))
+        markdown: await readFile(makeArticlePath({arg: id, POSTFIX: DIR.MDXDOWN_POSTFIX})),
+        status: 200
       }
   } catch (error) {
       console.log(`Error: at Creating MarkDown, ${id}`)
@@ -67,6 +69,30 @@ export const updateMarkdown = async (id, markdown) => {
   } catch {
     return { message: 'Markdown not found', status: 404 };
   
+  }
+};
+
+export const updateMarkdownPipe = async (props) => {
+  try {
+    if(props.result.status !== 200) throw Error("Error Found before updateMarkdownPipe")
+      const result =  await updateFile(makeArticlePath({arg: props.identifier, POSTFIX:DIR.MDXDOWN_POSTFIX}), props.markdown);
+      console.log('A passed')
+      return {
+          ...props,
+          result: {
+              message: "Successfully updateMarkdownPipe",
+              status: result.status
+          }
+      }
+  } catch {
+    console.error(err,props)
+    return {
+        ...props,
+        result: {
+            message: "Fail to Found updateMarkdownPipe",
+            status: 403
+        }
+    }
   }
 };
 
