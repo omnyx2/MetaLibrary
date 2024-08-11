@@ -25,6 +25,31 @@ async function addCommit(oldContent, newContent, message) {
   return newCommit.id;
 }
 
+async function addCommitPipe(props){
+  try {
+    if(props.result.status !== 200) throw Error("Error Found before addingCommit")
+      const result =  await addCommit(lePath(), props.markdown);
+      console.log('A passed')
+      return {
+          ...props,
+          result: {
+              message: "Successfully updateMarkdownPipe",
+              status: result.status
+          }
+      }
+  } catch {
+    console.error(err,props)
+    return {
+        ...props,
+        result: {
+            message: "Fail to Found updateMarkdownPipe",
+            status: 403
+        }
+    }
+  }
+
+}
+
 module.exports = {
   getHistory,
   addCommit

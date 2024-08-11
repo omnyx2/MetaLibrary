@@ -76,6 +76,7 @@ export async function PUT(request) {
       saveMetaDataPipe,
       updateMarkdownPipe,
       updateArticlePipe,
+      addCommitPipe
       // Add more processing functions as needed
     )({
       identifier: id,
