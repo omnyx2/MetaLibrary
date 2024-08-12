@@ -30,3 +30,10 @@ body {
     text-wrap: balance;
   }
 }
+
+input[type="checkbox"]:checked ~ #sidebarMenu {
+  transform: translateX(16rem);
+}
+
+
+ 

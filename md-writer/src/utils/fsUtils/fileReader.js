@@ -53,6 +53,16 @@ export async function readDir(dirPath) {
   }
 }
 
+export async function readDirWithConditions(dirPath, fn) {
+  try {
+    return await fs.readdirSync(await checkDir(dirPath)).filter(file=> fn(file));
+  } catch (err) {
+    console.error(`Error reading directory: ${err}`);
+    return [];
+  }
+}
+
+
 export async function readFileList(filePath) {
   try {
     const fileList = await fs.readdir(await checkDir(filePath))

@@ -2,9 +2,9 @@
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { pipe } from '@/utils/pipe/pipe'
-import { addCommit, newCommit } from '@/utils/historyManager';
-import { createMarkdown, updateMarkdownPipe, readMarkdowns, readMarkdown } from '@/utils/fsUtils/markdown';
-import { createArticle, updateArticlePipe, readArticle, readArticles } from '@/utils/fsUtils/article';
+import { addCommitPipe, newCommit } from '@/utils/historyManager';
+import { createMarkdown, updateMarkdownPipe, readMarkdownFromIdPipe, readMarkdown } from '@/utils/fsUtils/markdown';
+import { createArticle, updateArticlePipe, readArticles } from '@/utils/fsUtils/article';
 import { getFirstLineMax20Chars } from '@/utils/takeHeadersAsTitle'
 import { createMetaFile, readMetaData } from '@/utils/fsUtils/metadata';
 import { updateBookMetaDataPipe, saveMetaDataPipe } from '@/metacatologknologe/metafunctions'
@@ -27,10 +27,14 @@ export async function POST(request) {
   if( !(bookTitle && topic && markdown)) {
     return NextResponse.json({ message: 'Please choose Book Title, Topic, Write Markdown in it.'}, {status:403});
   }
+  // vaildation 로직을 추가를 해줘야하는데 어디에 어떤 항목을 해줘야 하나에 대해서 아직 명료하지 않은 기분이다.
+  // metafile을 생성할때 vaildation을 넣어줘야하는가 ? 아니면 파일을 저장할때 넣어줘야하는가 ?
+  // 
+
   // Template 프로젝트에 파일을 넣어준다.
   const result = await createMarkdown(markdown);
   const result3 = await createMetaFile({ identifier: result.id, bookTitle, topic, creator: "admin", markdown });
-  const result0 = await getFirstLineMax20Chars(markdown);
+  const result0 = getFirstLineMax20Chars(markdown);
   const result2 = await createArticle(bookTitle, topic, result0.title, markdown);
 
   if(result2.status === 409 || result.status !==200) {
@@ -69,23 +73,28 @@ export async function DELETE(request) {
 
 export async function PUT(request) {
   try {
-    const { id, markdown, username } = await request.json();
+    const { id, markdown } = await request.json();
+    const username = "test"
+    const now = new Date().toISOString()
     const processedData = await pipe(
+      readMarkdownFromIdPipe,
+      addCommitPipe,
       findMetaDataFromIdPipe,
       updateBookMetaDataPipe,
       saveMetaDataPipe,
       updateMarkdownPipe,
       updateArticlePipe,
-      addCommitPipe
-      // Add more processing functions as needed
+       // Add more processing functions as needed
     )({
       identifier: id,
       markdown,
-      username
+      username ,
+      commitMessage: now + username,
     });
+    console.log(processedData)
+
     const { bookTitle, topic, title, identifier } = processedData.newMetadata
-    const message = `Succesfully updated the post!${ bookTitle}/${topic+"/"+ title} \n ${id} \n ${identifier}`
-    console.log(message)
+    const message = `Succesfully updated the post! ${ bookTitle}/${topic+"/"+ title} at ${now}, \n  DOI:< ${id} >\n`
     if(processedData.result.status === 200) {
       return NextResponse.json({ message },{status:200});
     } else {
@@ -96,6 +105,7 @@ export async function PUT(request) {
     }
     // const updatedArticle = await processUpdate(req);
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { success: false, error: 'Failed to update article' },
       { status: 500 }
@@ -108,6 +118,7 @@ const findMetaDataFromIdPipe = async (props) => {
     if(props.result.status !== 200) throw Error("Error Found before findMetaDataFromId")
     const { identifier } = props;
     const oldMetadata = await readMetaData({ identifier })
+    console.log("test", oldMetadata)
     return {
       ...props,
       metadata: oldMetadata.status === 200? oldMetadata.data : undefined,

@@ -3,6 +3,7 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import DIR from './dir.json'
 import { updateFile, createFile, deleteFile } from './fileReader';
+import { getFirstLineMax20Chars } from '@/utils/takeHeadersAsTitle'
 const ARTICLESDIR = path.join(process.cwd(), '../library/books/book-')
 const PREFIX='/pages/';
 
@@ -79,14 +80,15 @@ export const readArticle = async (booktitle, topic, articleTitle) => {
 
 export const updateArticle = async ({ metadata, newMetadata, markdown }) => {
   const { bookTitle, topic, title } = metadata;
-  const _path = await makeArticleTemplatePath({  bookTitle, topic, title })
+  const properTitle = getFirstLineMax20Chars(title)
+  const _path = await makeArticleTemplatePath({  bookTitle, topic, title: properTitle })
   
   if(metadata.title === newMetadata.title) {
     await updateFile(_path, JSON.stringify(markdown));
   
   } else {
     const { bookTitle, topic, title } = newMetadata;
-    const _newPath = await makeArticleTemplatePath({  bookTitle, topic, title })  
+    const _newPath = await makeArticleTemplatePath({ bookTitle, topic, title })  
     await createFile(_path, JSON.stringify(markdown));
     await deleteFile(_path);
   }
@@ -118,7 +120,6 @@ export const updateArticlePipe = async (props) => {
     }
   }
 };
-
 
 export const saveMetaDataPipe = async (props) => {
   try {

@@ -12,7 +12,7 @@ function makeMetaFilePath({ arg="", POSTFIX = ""}) {
   return path.join(process.cwd(), DIR.META_FILE_PATH + arg + POSTFIX);
 }
 ``
-export const createMetaFile = async ({ identifier, bookTitle, topic, creator, markdown }) => {
+export const createMetaFile = async ({ identifier, bookTitle, topic, creator, markdown}) => {
   try {
     const metaData = await createBookMetaData({ identifier, bookTitle, topic, creator, markdown })
     const metaPath = await makeMetaFilePath({arg: identifier+"-meta", POSTFIX:DIR.META_FILE_POSTFIX})
@@ -34,6 +34,7 @@ export const updateMetaFile = async (identifier, metadata) => {
   try {
     // console.log("updating: ");
     const metaPath = await makeMetaFilePath({arg: identifier , POSTFIX:DIR.META_FILE_FULL_POSTFIX})
+    
     await updateFile(metaPath, JSON.stringify(metadata));
     // console.log(metaPath);
     return { message: 'MetaFile updated successfully!', status: 200  };
@@ -60,3 +61,11 @@ export const readMetaData = async ({ identifier }) => {
     }
   }
 } 
+
+export const searchMetaData = async(keys) => {
+  try {
+
+  } catch {
+    
+  }
+}

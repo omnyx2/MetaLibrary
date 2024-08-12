@@ -2,45 +2,62 @@
  
 import { useState, useEffect } from "react";
 import MarkdownManager from '../MarkdownManager'
-import TopicSeletor from '../ListSelector/ListSelector';
+import TopicSeletorToggle from '../ListSelectorToggle/ListSelector';
+import config from "../../../postcss.config.mjs";
 
 function Editor() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [bookList,setBookList] = useState();
+  const [bookAndTopicList,setBookAndTopicList] = useState([]);
   const [curBook, setCurBook] = useState(undefined);
-  const [topics, setTopics] = useState(undefined)
+  const [curBookAndTopic, setCurBookAndTopic] = useState(undefined)
   const [curTopic, setCurTopic] = useState(undefined);
+  const [configs, setConfigs] = useState([]);
 
   useEffect(() => {
-    fetchBookList()
+    fetchAllTopics() 
   }, []);
   useEffect(() => {
-    if(curBook){
-      fetchTopics()
-    }
-  }, [curBook]);
-  
-  const fetchBookList = async () => {
-    const response = await fetch('/api/books/');
+    setBookAndTopicList(buildSDoubleSelection(configs));
+
+  }, [configs]);
+  useEffect(()=> {
+    console.log(curBookAndTopic)
+  },[curBookAndTopic])
+
+  const fetchAllTopics = async () => {
+    const response = await fetch('/api/all-topics');
     const result = await response.json();
-    setBookList(result.books);
-  };
-  const fetchTopics = async () => {
-    console.log('/api/topics?booktitle='+curBook)
-    const response = await fetch('/api/topics?title='+curBook);
-    const result = await response.json();
-    setTopics(result.topics);
+    
+    const data = []
+    result.allTopics.map((description)=> {
+      console.log(description)
+      data.push([description.bookTitle,'/'])
+      description.topics.map((item) =>  data.push([description.bookTitle, item]))
+    })
+    setConfigs(data);
   };
 
+  function buildSDoubleSelection(arr){
+    if(!arr) return [];
+    return arr.map(([oI,tI]) => `${oI} -> ${tI}`);
+  }
+  function handleDoubleSelection(item){
+    setCurBookAndTopic(item);
+    const idx = bookAndTopicList.indexOf(item);
+    setCurBook(configs[idx][0])
+    setCurTopic(configs[idx][1])
+  }
+
   return (
-    <div className="h-[90vh]" >
-      {
-        bookList && <TopicSeletor curItem={curBook} curList={bookList} label={"Select the book you want to write"} setCurItem={(e) => setCurBook(e)} />
-      }
-      {
-        topics && <TopicSeletor curItem={curTopic} curList={topics} label={"Select the topic you want to write"} setCurItem={(e) => setCurTopic(e)} />
-      }
+    <div className="h-[80vh]" >
+        {
+          configs && <TopicSeletorToggle
+            curItem={ curBookAndTopic } 
+            curList={ bookAndTopicList }
+            label={""} 
+            setCurItem={(e) => handleDoubleSelection(e)} />
+        }
        <MarkdownManager 
         bookTitle={curBook}
         topic={curTopic}

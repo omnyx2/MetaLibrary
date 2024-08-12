@@ -8,7 +8,7 @@ async function getHistory() {
   return JSON.parse(historyData);
 }
 
-async function addCommit(oldContent, newContent, message) {
+async function addCommit( oldContent, newContent, commitMessage ) {
   const changes = diffLines(oldContent, newContent);
   const history = await getHistory();
 
@@ -16,41 +16,17 @@ async function addCommit(oldContent, newContent, message) {
     id: crypto.randomUUID(),
     timestamp: new Date().toISOString(),
     changes: changes.filter(change => change.added || change.removed),
-    message
+    commitMessage
   };
 
   history.push(newCommit);
   await writeHistoryFile(JSON.stringify(history, null, 2));
 
-  return newCommit.id;
+  return { identifier: newCommit.id, status:200};
 }
 
-async function addCommitPipe(props){
-  try {
-    if(props.result.status !== 200) throw Error("Error Found before addingCommit")
-      const result =  await addCommit(lePath(), props.markdown);
-      console.log('A passed')
-      return {
-          ...props,
-          result: {
-              message: "Successfully updateMarkdownPipe",
-              status: result.status
-          }
-      }
-  } catch {
-    console.error(err,props)
-    return {
-        ...props,
-        result: {
-            message: "Fail to Found updateMarkdownPipe",
-            status: 403
-        }
-    }
-  }
-
-}
 
 module.exports = {
   getHistory,
-  addCommit
+  addCommit,
 };

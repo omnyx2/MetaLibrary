@@ -106,3 +106,25 @@ export const deleteMarkdown = async (id) => {
 
   return { message: 'Markdown not found', status: 404 };
 };
+
+export const readMarkdownFromIdPipe = async (props) => {
+  try {
+    const { id } = props;
+    const result = await readMarkdown(id);
+    return {
+      ...props,
+      oldMarkdown: result.markdown,
+      result: {
+        message: "Successed to find meta data",
+        status: 200,
+      }
+
+    }
+  } catch (error) {
+    return {
+      message: "Failed to finde the meta data, Somthing wrong",
+      error,
+      stauts: 403
+    }
+  }
+}

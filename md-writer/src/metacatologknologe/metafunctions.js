@@ -3,10 +3,6 @@
 // 이름은 유일하고 우아해야한다.
 // dubiln core를 참조하도록한다.
 // 아직 완성 안됨 더 많이 개발 해야함.
-import fs from 'fs-extra';
-import path from 'path';
-import { getTitleFromMarkDownOnly } from "@/utils/takeHeadersAsTitle"
-import DIR from './dir.json';  
 import { updateMetaFile } from '@/utils/fsUtils/metadata';
 import { getFirstLineMax20Chars } from '@/utils/takeHeadersAsTitle'
 const options = {
@@ -19,7 +15,7 @@ const options = {
 const metaFunction = {
     version: () => '1.0',
     bookTitle: (v) => v,
-    title: (v) => getTitleFromMarkDownOnly(v),
+    title: (v) => { const data = getFirstLineMax20Chars(v); return data.title},
     getDate: () => new Date().toLocaleDateString('en-US', options),
     creator: (v) => v,
     ownerGroup: (v) => v,
@@ -32,7 +28,7 @@ const metaDataGen_v_0 = (v, creator, identifier, topic, bookTitle) => ({
     title: metaFunction.title(v),
     date: metaFunction.getDate(),
     creator: metaFunction.creator(creator),
-    contributor: metaFunction.addContributor(creator,[]),
+    contributors: metaFunction.addContributor(creator,[]),
     identifier,
     bookTitle,
     topic,
@@ -68,7 +64,7 @@ const dublinCorePageFormat = {
 
 
 // Function to create metadata for an MDX file and output it as JSON
-export const createBookMetaData = ({ identifier, creator, markdown, topic, bookTitle }) => {
+export const createBookMetaData = ({ identifier, creator, markdown, topic, bookTitle, title }) => {
     const metadata = metaDataGen_v_0(markdown, creator, identifier, topic, bookTitle);
     return { ...dublinCorePageFormat, ...metadata };
  

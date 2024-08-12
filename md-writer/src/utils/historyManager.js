@@ -25,10 +25,9 @@ async function newCommit(id,newContent,message){
   return result;
 }
 
-async function addCommit(id, oldContent, newContent, message) {
+async function addCommit({identifier, oldContent, newContent, commitMessage}) {
   const changes = diffWords(oldContent, newContent);
-  const result = await getHistory(id);
-  console.log("resul;t",result, "wghu?")
+  const result = await getHistory(identifier);
   const newCommit = {
     id: crypto.randomUUID(),
     timestamp: new Date().toISOString(),
@@ -37,16 +36,44 @@ async function addCommit(id, oldContent, newContent, message) {
         added: part.added,
         removed: part.removed
       })),
-    message
+      commitMessage
   };
 
   result.push(newCommit);
-  console.log(result);
-  return await updateHistoryFile(id,JSON.stringify(result));
+  return await updateHistoryFile(identifier,JSON.stringify(result));
+}
+
+async function addCommitPipe(props){
+  try {
+    const identifier = props.identifier
+    const oldContent = props.oldMarkdown;
+    const newContent = props.markdown;
+    const commitMessage = props.commitMessage;
+    if(props.result.status !== 200) throw Error("Error Found before addingCommit")
+      const result =  await addCommit({ identifier, oldContent, newContent, commitMessage });
+      return {
+          ...props,
+          result: {
+              message: "Successfully add the commited",
+              status: 200
+          }
+      }
+  } catch(err) {
+    console.error(err,props)
+    return {
+        ...props,
+        result: {
+            message: "Fail to Found updateMarkdownPipe",
+            status: 403
+        }
+    }
+  }
+
 }
 
 module.exports = {
   getHistory,
   addCommit,
-  newCommit
+  addCommitPipe,
+  newCommit,
 };

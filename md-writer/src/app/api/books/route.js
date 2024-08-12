@@ -6,7 +6,7 @@ import { getBooksTitle } from '@/utils/checker/books';
 
 export async function GET() {
   const config = await getBooksTitle();
-  console.log(config)
+  // console.log(config)
   if (!config) {
      return NextResponse.json({ message: 'Failed to save configuration' }, { status: 500 });
   }
