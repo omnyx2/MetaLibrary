@@ -6,8 +6,7 @@ use serde::Deserializer;
 #[derive(Debug, Deserialize)]
 pub struct ArticleMetaData {
     pub bookTitle: String,
-    #[serde(deserialize_with = "deserialize_string_or_default")]
-    contributor: String,
+    contributors: Vec<String>,
     #[serde(deserialize_with = "deserialize_string_or_default")]
     coverage: String,
     creator: String,

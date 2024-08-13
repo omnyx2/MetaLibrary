@@ -13,10 +13,23 @@
        }   
     },
     {
-        "SLAMs": {
+     "Niki": {
+        "topics":{
+          "isOrdered": true,
+          "tables": ["ROS", "IsaacSim", "Lidar"]
+         },
+         "description":"Hi I'm Niki! Lab Interns",
+         "secureLevel": 1,
+         "exposeType": "inner",
+         "supportPublish": true,
+         "port": 3015
+     }   
+     }, 
+     {
+        "DT Sensors": {
            "topics":{
              "isOrdered": true,
-             "tables": ["Sensors", "Camera", "Lidar", "GPS", "IMU", "Algorithms", "ROS"]
+             "tables": ["Sensors", "Camera", "Lidar", "GPS", "IMU", "Algorithms", "ROS", "AIs"]
             },
             "description": "../book_description/SLAMS",
             "secureLevel": 1,
@@ -26,55 +39,16 @@
         }   
      },
      {
-      "InYong": {
-         "topics":{
-           "isOrdered": true,
-           "tables": ["Sensors", "Camera", "Lidar", "GPS", "IMU", "Algorithms", "ROS"]
-          },
-          "description":"Hi I'm InYong! Lab Member",
-          "secureLevel": 1,
-          "exposeType": "inner",
-          "supportPublish": false,
-          "port": 3012
-      }   
-   },
-     {
-        "Interns": {
-           "topics":{
-             "isOrdered": true,
-             "tables": ["About-Lab", "Mobilex", "Kubernetes",  "Learning"]
-            },
-            "description":"Hi I'm Interns! Lab Member",
-            "secureLevel": 1,
-            "exposeType": "inner",
-            "supportPublish": false,
-            "port": 3013
-        }   
-     },
-     {
-        "Official": {
+        "TheLectureOf": {
            "topics":{
              "isOrdered": true,
              "tables": ["About", "Services", "Works", "QuickStart", "Docs"]
             },
-            "description":"Hi I'm Official! Lab Member",
+            "description":"The Project Of writing education works",
             "secureLevel": 1,
             "exposeType": "inner",
             "supportPublish": true,
             "port": 3014
         }   
-     },
-     {
-      "Niki": {
-         "topics":{
-           "isOrdered": true,
-           "tables": ["ROS", "IsaacSim", "Lidar"]
-          },
-          "description":"Hi I'm Niki! Lab Interns",
-          "secureLevel": 1,
-          "exposeType": "inner",
-          "supportPublish": true,
-          "port": 3015
-      }   
-   }
+     }
 ]
