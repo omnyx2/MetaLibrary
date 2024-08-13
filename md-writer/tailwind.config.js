@@ -10,8 +10,10 @@ module.exports = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "edit-icon": "url('/edit_icon.png')"
+        "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "edit-icon": "url('/edit_icon.png')",
+        "wood-whitebrown":  "url('/wood-whitebrown.jpg')",
+        "wood-darkbrown":  "url('/wood-darkbrown.jpg')"
       },
     },
   },

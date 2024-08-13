@@ -4,7 +4,8 @@ import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import rehypeSanitize from "rehype-sanitize";
 import TitleHeader from '../components/TitleHeader'
-
+// import MeraidPlugin from './MeraidPlugin/index'
+import Code from "./MeraidPlugin/index";
 
 const MDEditor = dynamic(
   () => import("@uiw/react-md-editor").then(mod => mod.default),

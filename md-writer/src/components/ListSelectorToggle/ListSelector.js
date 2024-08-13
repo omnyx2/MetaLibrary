@@ -4,7 +4,7 @@ import styles from './ListSelector.mudule.css';
 const ConfigSelector = ({ label, curList, curItem, setCurItem }) => {
  
   return (
-    <div className="relative w-0 h-0">
+    <div className="inline-block w-auto h-auto">
       <label className=''></label>
       <label for="countries" className="relative block text-sm font-medium text-gray-900 dark:text-black"> {label} </label>
       <select

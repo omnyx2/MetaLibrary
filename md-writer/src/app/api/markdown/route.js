@@ -22,11 +22,11 @@ import { updateBookMetaDataPipe, saveMetaDataPipe } from '@/metacatologknologe/m
 export async function POST(request) {
 
   // 토큰 받아서 만드는 로직 만들것
-  const { bookTitle, topic, markdown } = await request.json();
-  console.log(topic)
+  let { bookTitle, topic, markdown } = await request.json();
   if( !(bookTitle && topic && markdown)) {
     return NextResponse.json({ message: 'Please choose Book Title, Topic, Write Markdown in it.'}, {status:403});
   }
+  if(topic === "/") topic = ""
   // vaildation 로직을 추가를 해줘야하는데 어디에 어떤 항목을 해줘야 하나에 대해서 아직 명료하지 않은 기분이다.
   // metafile을 생성할때 vaildation을 넣어줘야하는가 ? 아니면 파일을 저장할때 넣어줘야하는가 ?
   // 
