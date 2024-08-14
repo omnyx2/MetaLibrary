@@ -15,7 +15,18 @@ module.exports = {
         "wood-whitebrown":  "url('/wood-whitebrown.jpg')",
         "wood-darkbrown":  "url('/wood-darkbrown.jpg')"
       },
+      gridTemplateColumns: {
+        // Simple 16 column grid
+        '16': 'repeat(16, minmax(0, 1fr))',
+        'desk-article': '1fr, 3fr, 1fr',
+        // Complex site-specific column configuration
+        'footer': '200px minmax(900px, 1fr) 100px',
+      }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+
+  ],
 };
+ 

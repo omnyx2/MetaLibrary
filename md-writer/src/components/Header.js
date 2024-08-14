@@ -13,11 +13,29 @@ const ToggleSideBar = () => {
   )
 }
 
+const ClickAbleToolLinkButtion = ({canClick, icon, baseUrl, arg}) => {
+  return (
+    <>
+      {
+        canClick ?
+        (<Link className="block bg-white font-black font-sm rounded-full p-2 shadow-inner" key={"a"} href={`${baseUrl}/${arg}`} passHref>
+          {icon}
+        </Link>)
+        :
+        (<div className="block bg-gray-100 font-black font-sm rounded-full p-2 shadow-inner" placeholder="Make article, No history" key={baseUrl}>
+          {icon}
+        </div>)
+      }
+    </>
+
+  )
+}
+
 const Header = ({ from }) => {
 
   const [menuToggle, setMenuToggle] = useState(false);
+  const [markdownId, setMakrdownId] = useState(undefined);
   
-
   return (
     <header className={`${styles.header} ${styles['sticky-header']}`}>
       <div className={styles.left}>
@@ -40,10 +58,10 @@ const Header = ({ from }) => {
               {/* <div id="sidebarMenu" className="fixed top-0 right-0 h-full w-30 h-[50vh] rounded-full mr-3 mt-[25vh] bg-gradient-to-b from-pink-500 to-blue-700 transform -translate-x-0 transition-transform duration-300 ease-in-out mt-16"> */}
                 <div class="p-6">
                      <ul class="mt-6">
+                        <ClickAbleToolLinkButtion canClick={markdownId !== undefined ? false : true} icon={"test"} baseUrl={"history"} arg="asfdasfdafsafsdfsfsfasdf"/>
                         <li class="mb-4"><a href="#" className="block bg-white font-black font-sm rounded-full p-2 shadow-inner">HI</a></li>
                         <li class="mb-4"><a href="#" className="block bg-white font-black font-sm rounded-full p-2 shadow-inner">HI</a></li>
-                        <li class="mb-4"><a href="#" className="block bg-white font-black font-sm rounded-full p-2 shadow-inner">HI</a></li>
-                        <li class="mb-4"><a href="#" className="block bg-white font-black font-sm rounded-full p-2 shadow-inner">HI</a></li>
+                        <ClickAbleToolLinkButtion canClick={true} icon={"Help!"} baseUrl={"usermanual"} arg=""/>
                     </ul>
                 </div>
               </div>

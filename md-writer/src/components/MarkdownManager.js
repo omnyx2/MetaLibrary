@@ -96,14 +96,8 @@ const MarkdownManager = ({bookTitle, topic, articleId}) => {
   };
 
   return (
-    <div>
-       <form onSubmit={handleSubmit}>
-         <MarkdownEditor value={currentMarkdown} setValue={setCurrentMarkdown} />
-        <button type="submit">{editId ? '문서 생성' : 'Create'}</button>
-      </form>
-      {message && <p>{message}</p>}
-
-      <ul>
+    <div className='w-[100vw] flex justify-center'>
+      {/* <ul>
         {markdowns.map((markdown) => (
           <li className='flex w-full justify-between border-bottom-1' key={markdown.id}>
             <pre className='w-[76%] pl-10'>{markdown.title}</pre>
@@ -111,8 +105,18 @@ const MarkdownManager = ({bookTitle, topic, articleId}) => {
             <button className='w-auto pr-10' onClick={() => deleteMarkdown(markdown.id)}>Delete</button>
           </li>
         ))}
-      </ul>
+      </ul> */}
+      <article className='w-[60rem] pr-2 pl-12'>
+        <form onSubmit={handleSubmit}>
+          <MarkdownEditor value={currentMarkdown} setValue={setCurrentMarkdown} />
+          <button type="submit">{editId ? '문서 생성' : 'Create'}</button>
+        </form>
+        {message && <p>{message}</p>}
+      </article>
+      <div/>
+
     </div>
+
   );
 };
 

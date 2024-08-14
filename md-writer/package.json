@@ -9,20 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mdxeditor/editor": "^3.11.0",
     "@module-federation/nextjs-mf": "^8.4.6",
+    "@svgr/webpack": "^8.1.0",
     "@types/diff": "^5.2.1",
-    "@uiw/react-md-editor": "^3.6.0",
     "diff": "^5.2.0",
     "fs-extra": "^11.2.0",
-    "mermaid": "^10.9.1",
     "next": "14.2.5",
-    "next-remove-imports": "^1.0.12",
     "react": "^18",
     "react-dom": "^18",
-    "rehype-sanitize": "^6.0.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.14",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "postcss": "^8",

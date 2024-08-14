@@ -50,7 +50,7 @@ function Editor() {
   }
 
   return (
-    <div className="h-[80vh]" >
+    <div className="h-full w-full flex justify-center" >
       <TogglesContainer>
         {
           configs && <TopicSeletorToggle

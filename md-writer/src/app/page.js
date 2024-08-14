@@ -5,7 +5,6 @@ import MarkdownManager from '../components/MarkdownManager'
 import Editor from '../components/Editor'
 import { useSearchParams } from 'next/navigation'
 
-
 const searchMetadata = async (conditions) => {
   const response = await fetch('/api/metadatas', {
     method: 'POST',
@@ -49,8 +48,7 @@ function HomePage() {
   }, []);
 
   return (
-    
-    <div className="h-[90vh]" >
+    <div className="h-[100vh] w-[100vw]" >
       { isLoggedIn ?  <Editor /> : <AuthForm />}
     </div>
   );
