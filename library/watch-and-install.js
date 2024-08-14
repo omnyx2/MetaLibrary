@@ -25,7 +25,7 @@ const buildBook = async (dir) => {
 const installPackages = (dir) => {
   const projectDir = path.resolve(baseDir, dir);
   console.log(`Building and serving ${projectDir}`);
-  exec(`cd ${projectDir} && npm install`, (err, stdout, stderr) => {
+  exec(`cd '${projectDir}' && npm install`, (err, stdout, stderr) => {
     if (err) {
       console.error(`Error building and serving ${dir}:`, err.message);
       return;

@@ -14,7 +14,7 @@ const buildBook = async (dir) => {
   const projectDir = path.resolve(baseDir, dir);
   console.log(`Building and serving ${projectDir}`);
   try {
-    await execPromise(`cd ${projectDir} && npm run build`);
+    await execPromise(`cd '${projectDir}' && npm run build`);
     console.log(`Successfully built and served ${projectDir}`);
   } catch (err) {
     console.error(`Error building and serving ${dir}:`, err.message);
