@@ -1,14 +1,14 @@
 import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 import {Anchor} from './components/Anchor'
-function Test( ): React.FC {
+function Test(props: any, deprecatedLegacyContext?: any): React.ReactElement {
   return
-  (<span className='font-black'>
+  (<div>
     hi
-  </span>)
+  </div>)
 }
 const config: DocsThemeConfig = {
-  logo: <span>DUM_DEV</span>,
+  logo: <span>Ryu,HyunSeok</span>,
   project: {
     link: 'https://github.com/shuding/nextra-docs-template',
   },
@@ -45,7 +45,7 @@ const config: DocsThemeConfig = {
       }
       
       const {topic, title} = parseUrl(filePath)
-      const baseUrl = "http://localhost:3000?"
+        const baseUrl = 'http://localhost:3000?bookTitle=Ryu,HyunSeok'
       const editUrl = baseUrl+`topic=${topic}&title=${title}`
 
       if (!editUrl) { 
@@ -62,7 +62,7 @@ const config: DocsThemeConfig = {
   docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
   footer: {
     text: 'Nextra Docs Template',
-  },  
+  },
  
 }
 

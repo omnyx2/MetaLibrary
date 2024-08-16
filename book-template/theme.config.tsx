@@ -13,7 +13,7 @@ const config: DocsThemeConfig = {
     link: 'https://github.com/shuding/nextra-docs-template',
   },
   chat: {
-    link: 'http://localhost:3000?bookTitle=Ryu,HyunSeok',
+    link: 'http://localhost:3000',
     icon: 
     <div className=''>  
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -45,7 +45,7 @@ const config: DocsThemeConfig = {
       }
       
       const {topic, title} = parseUrl(filePath)
-      const baseUrl = "http://localhost:3000?"
+      const baseUrl = 'http://localhost:3000'
       const editUrl = baseUrl+`topic=${topic}&title=${title}`
 
       if (!editUrl) { 

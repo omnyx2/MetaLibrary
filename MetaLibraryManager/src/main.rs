@@ -2,7 +2,8 @@ mod supercommand;
 mod jsoneditor;
 mod blogthemeeditor;
 mod metaformat_article;
-  
+mod nextra_config_editor;
+
 use serde_json::Value;
 use std::fs::{self, File};
 use std::io::{self, BufReader, Read};
@@ -70,7 +71,7 @@ fn main() -> io::Result<()> {
     let book_article_path = "pages/";
     let template_docs_path = "../book-template";
     let template_prefix = "../library/books/book-";
-
+    let md_writer_url = "http://localhost:3000";
     let mut paths_to_check: Vec<String> = vec![
         "../metaconfigs/book".into(),
         "../md-writer/metaconfigs/book".into(),
@@ -121,6 +122,16 @@ fn main() -> io::Result<()> {
             // Write the updated JSON back to the file
             let _ = jsoneditor::write_json_file(&new_path, &json)?;
          }   
+    }
+
+    for item in &books {
+        for (key, _value) in item {
+            let new_path: String =  format!("{template_prefix}{key}/theme.config.tsx").to_string();
+            // Read the JON file
+            nextra_config_editor::edit_unique_tsx_file(&new_path, &format!("const baseUrl = '{md_writer_url}'"), &format!("        const baseUrl = '{md_writer_url}?bookTitle={key}'"));
+            nextra_config_editor::edit_unique_tsx_file(&new_path, &format!(" link: '{md_writer_url}'"), &format!("    link: '{md_writer_url}?bookTitle={key}',"));
+        }  
+
     }
 
     for item in &books {
