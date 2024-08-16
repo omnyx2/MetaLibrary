@@ -4,6 +4,11 @@ import AuthForm from '../components/AuthForm'
 import MarkdownManager from '../components/MarkdownManager'
 import Editor from '../components/Editor'
 import { useSearchParams } from 'next/navigation'
+import JumpingBooks  from "@/components/SVGs/JupmingBooks";
+
+import { useRouter } from 'next/router';
+ 
+
 
 const searchMetadata = async (conditions) => {
   const response = await fetch('/api/metadatas', {
@@ -19,7 +24,6 @@ const searchMetadata = async (conditions) => {
 };
 
 function HomePage() {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const searchParams = useSearchParams()
   // http://localhost:3000/?bookTitle=etsts&title=fasdfasfd&topic=fsadfasdf
@@ -27,13 +31,11 @@ function HomePage() {
   const title = searchParams.get('title')
   const topic = searchParams.get('topic')
 
-
   useEffect(() => {
     console.log( bookTitle,
       title,
       topic)
     if ( bookTitle && title && topic) {
- 
       console.log(searchMetadata({
         bookTitle,
         title,
@@ -48,8 +50,10 @@ function HomePage() {
   }, []);
 
   return (
+    
     <div className="h-[100vh] w-[100vw]" >
       { isLoggedIn ?  <Editor /> : <AuthForm />}
+      <JumpingBooks/>
     </div>
   );
 }

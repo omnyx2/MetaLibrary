@@ -1,15 +1,41 @@
 "use client";
-
+import simpleSandpackConfig from './code-blocks'
+import imageUploadHandler  from './imageUploadHandler';
 import {
     headingsPlugin,
     listsPlugin,
     quotePlugin,
+    sandpackPlugin,
+    imagePlugin,
+    codeBlockPlugin,
+    codeMirrorPlugin,
     thematicBreakPlugin,
     markdownShortcutPlugin,
     InsertFrontmatter,
+    AdmonitionDirectiveDescriptor,
+    directivesPlugin,
     tablePlugin,
-    UndoRedo, BoldItalicUnderlineToggles, toolbarPlugin, InsertTable,
+    UndoRedo, 
+     
+    toolbarPlugin, 
+    InsertTable,
     MDXEditor,
+    BlockTypeSelect,
+    BoldItalicUnderlineToggles,
+    ChangeAdmonitionType,
+    ChangeCodeMirrorLanguage,
+    CodeToggle,
+    CreateLink,
+    DiffSourceToggleWrapper,
+    InsertAdmonition,
+    InsertCodeBlock,
+  
+    InsertImage,
+    InsertSandpack,
+    ListsToggle,
+    ShowSandpackInfo,
+    ConditionalContents,
+
 } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
  
@@ -26,13 +52,27 @@ const Editor = ({ markdown, editorRef, handleOnChange}, props) => {
       ref={editorRef}
       markdown={markdown}
       contentEditableClassName="prose lg:prose-sm"
-      plugins={[        
+      
+      plugins={[
+        directivesPlugin({ directiveDescriptors: [AdmonitionDirectiveDescriptor] }),
         headingsPlugin(),
         listsPlugin(),
         quotePlugin(),
         thematicBreakPlugin(),
         markdownShortcutPlugin(),
         tablePlugin(),
+        
+        codeBlockPlugin({defaultCodeBlockLanguage: 'js'}),
+        sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
+        codeMirrorPlugin({ codeBlockLanguages: { js: 'JavaScript', css: 'CSS' } }),
+
+        imagePlugin({
+          imageUploadHandler: () => {
+            imageUploadHandler
+          },
+          imageAutocompleteSuggestions: ['https://picsum.photos/200/300', 'https://picsum.photos/200']
+        }),
+
         toolbarPlugin({
           toolbarContents: () => (
             <>
@@ -40,6 +80,28 @@ const Editor = ({ markdown, editorRef, handleOnChange}, props) => {
               <UndoRedo />
               <BoldItalicUnderlineToggles />
               <InsertTable/>
+              <InsertSandpack/>
+              <InsertImage />
+              <InsertCodeBlock/>
+              {/* <AdmonitionDirectiveDescriptor/> */}
+              <BlockTypeSelect/>
+              <ListsToggle/>
+              {/* <ShowSandpackInfo/> */}
+              {/* <ChangeAdmonitionType/> */}
+              <CreateLink/>
+              <InsertAdmonition/>
+
+              <DiffSourceToggleWrapper/>
+              {/* <ConditionalContents
+                options={[
+                    { when: (editor) => editor?.editorType === 'codeblock', contents: () => <ChangeCodeMirrorLanguage /> },
+                    { when: (editor) => editor?.editorType === 'sandpack', contents: () => <ShowSandpackInfo /> },
+                    { fallback: () => ( <> 
+                    <InsertCodeBlock />
+                    <InsertSandpack />
+                  </>) }
+                  ]}
+              /> */}
              </>
           )
         })

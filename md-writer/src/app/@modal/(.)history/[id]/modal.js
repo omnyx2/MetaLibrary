@@ -22,8 +22,8 @@ export function Modal({ children } ) {
   return createPortal(
     <div className="modal-backdrop">
       <dialog ref={dialogRef} className="modal" onClose={onDismiss}>
+      <button onClick={onDismiss} className="relative left-0 top-0 close-button w-12 h-12 bg-gray-300 " />
         {children}
-        <button onClick={onDismiss} className="close-button w-12 h-12 bg-gray-300 " />
       </dialog>
     </div>,
     document.getElementById('modal-root')

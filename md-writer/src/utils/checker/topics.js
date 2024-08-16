@@ -38,6 +38,7 @@ export const getAllBookTopics = async () => {
   let jsonData = await readJsonFile()
   return await extractAllTopics(jsonData)
 }
+
 export const getBookTopics = async (bookName) => {
   let jsonData = await readJsonFile()
   return await extractTopics(jsonData, bookName)

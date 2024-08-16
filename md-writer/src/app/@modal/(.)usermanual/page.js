@@ -4,7 +4,10 @@ import { Modal } from './modal';
 const UserManualPage = () => {
   return (
     <div>
-      testes
+      <h1>
+        UserManual - Usage
+      </h1>
+      Header 
     </div>
   )
 }
