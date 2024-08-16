@@ -7,7 +7,7 @@ const Test = (): React.ReactNode => {
   </div>)
 }
 const config: DocsThemeConfig = {
-  logo: <span>Niki</span>,
+  logo: <span>TheLectureOf</span>,
   project: {
     link: 'https://github.com/shuding/nextra-docs-template',
   },
