@@ -28,28 +28,29 @@ const config: DocsThemeConfig = {
       function parseUrl(url) {
         // Split the URL by '/' to break it into parts
         const parts = url.split('/');
-        if(parts.lenght > 2) {
+ 
+        console.log(parts);
+        if(parts.length > 2) {
           const topic = parts[1]; // This is 'ARC'
-          const title = parts[2]// This will be "Test-it's-working-Super.mdx"
+          const title = parts[2];// This will be "Test-it's-working-Super.mdx"
           return { topic, title: title.replace('.mdx', '') };
         } else if(parts.length === 2) {
-          const topic = "/" // This is 'ARC'
-          const title = parts[1]// This will be "Test-it's-working-Super.mdx"
+          const topic = "/"; // This is 'ARC'
+          const title = parts[1];// This will be "Test-it's-working-Super.mdx"
           return { topic, title: title.replace('.mdx', '') };
         } else if(parts.length ===1){
-          console.log(parts)
-          const topic = "/" // This is 'ARC'
-          const title = "index"
+          const topic = "/"; // This is 'ARC'
+          const title = "index";
           return { topic, title: title.replace('.mdx', '') };
         }
       }
       
-      const {topic, title} = parseUrl(filePath)
-        const baseUrl = 'http://localhost:3000?bookTitle=Ryu,HyunSeok'
-      const editUrl = baseUrl+`topic=${topic}&title=${title}`
+      const {topic, title} = parseUrl(filePath);
+        const baseUrl = 'http://localhost:3000?bookTitle=Ryu,HyunSeok';
+      const editUrl = baseUrl+`&topic=${topic}&title=${title}`;
 
       if (!editUrl) { 
-        return null 
+        return null ;
       } 
       return ( 
         <Anchor className={className} href={editUrl}> 

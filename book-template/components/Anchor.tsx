@@ -58,4 +58,4 @@ export const Anchor = forwardRef<HTMLAnchorElement, AnchorProps>(function (
   )
 })
 
-Anchor.displayName = 'Anchor'∑
+Anchor.displayName = 'Anchor'

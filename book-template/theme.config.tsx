@@ -46,7 +46,7 @@ const config: DocsThemeConfig = {
       
       const {topic, title} = parseUrl(filePath)
       const baseUrl = 'http://localhost:3000'
-      const editUrl = baseUrl+`topic=${topic}&title=${title}`
+      const editUrl = baseUrl+`&topic=${topic}&title=${title}`
 
       if (!editUrl) { 
         return null 
