@@ -51,7 +51,7 @@ const Editor = ({ markdown, editorRef, handleOnChange}, props) => {
       onChange={(e) => handleOnChange(e)}
       ref={editorRef}
       markdown={markdown}
-      contentEditableClassName="prose lg:prose-sm"
+      contentEditableClassName="prose"
       
       plugins={[
         directivesPlugin({ directiveDescriptors: [AdmonitionDirectiveDescriptor] }),

@@ -1,7 +1,7 @@
 'use client'
  import { useState, useEffect } from "react";
 import AuthForm from '../components/AuthForm'
-import MarkdownManager from '../components/MarkdownManager'
+import MarkdownManager from '../components/Editor/MarkdownManager'
 import Editor from '../components/Editor'
 import { useSearchParams } from 'next/navigation'
 import JumpingBooks  from "@/components/SVGs/JupmingBooks";

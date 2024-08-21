@@ -1,7 +1,7 @@
 'use client'
  
 import { useState, useEffect } from "react";
-import MarkdownManager from '../MarkdownManager'
+import MarkdownManager from './MarkdownManager'
 import TopicSeletorToggle from '../ListSelectorToggle/ListSelector';
 import config from "../../../postcss.config.mjs";
 import TogglesContainer from '../TogglesContainer/index';
