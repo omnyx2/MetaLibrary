@@ -1,9 +1,9 @@
 import BookShelf from './JumpingBookShelf';
 
-export default function JumpingBooks() {
+export default function JumpingBooks({mode}) {
   return (
     <div>
-      <BookShelf />
+      <BookShelf mode={mode} />
     </div>
   );
 }

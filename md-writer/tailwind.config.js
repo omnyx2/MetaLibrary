@@ -7,6 +7,20 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        open: {
+          '0%': {  width: '0px', height:'0px' },
+          '100%': {widht: 'auto', height:'auto'}
+        },
+        close: {
+          '0%': {widht: 'auto', height:'auto'},
+          '100%': {  width: '0px', height:'0px' },
+        },
+    
+      },
+      animation: {
+        open: 'open 1s transition-all ease-in-out',
+      },
       typography: {
         DEFAULT: {
           css: {

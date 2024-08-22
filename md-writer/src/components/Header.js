@@ -32,6 +32,12 @@ const ClickAbleToolLinkButtion = ({canClick, icon, baseUrl, arg}) => {
   )
 }
 
+const submitMarkdown = async () => {
+  const value = await localStorage.getItem("markdown") || "";
+  console.log(value)
+  return value
+}
+
 const Header = ({ SubmitFunc }) => {
 
   const [menuToggle, setMenuToggle] = useState(false);
@@ -49,10 +55,10 @@ const Header = ({ SubmitFunc }) => {
         <h1> - META WRITER - </h1>
       </div>
       <div className="flex w-24 justify-between">
-      <div className='bg-blue-400 text-xs font-mono m-0 pl-2 pt-0.5 pb-0.5 text-white flex items-center pr-1 hover:bg-sky-700 checked:bg-sky-700 transition-all duration-300 ease-in-out rounded-full'
-        onClick={SubmitFunc}
-      >
-              SAVE 
+      <div className='bg-blue-400 text-xs font-mono m-0 pl-2 pt-0.5 pb-0.5 text-white flex items-center pr-1 hover:bg-sky-700 checked:bg-sky-700 transition-all duration-300 ease-in-out rounded-full'>
+              <Link href="/submitmdx">
+               SAVE
+              </Link> 
               <div className='p-1'>
                 <SendIcon/>
               </div>

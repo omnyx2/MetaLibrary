@@ -3,6 +3,7 @@
 import {   useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
+import CloseButton from '@/components/SVGs/CloseButton';
 
 export function Modal({ children } ) {
   const router = useRouter();
@@ -22,8 +23,11 @@ export function Modal({ children } ) {
   return createPortal(
     <div className="modal-backdrop">
       <dialog ref={dialogRef} className="modal" onClose={onDismiss}>
-      <button onClick={onDismiss} className="relative left-0 top-0 close-button w-12 h-12 bg-gray-300 " />
-        {children}
+      <div className='w-full flex justify-between bg-gray-100 p-2'>
+          <div className='text-sm'> User Manual Page</div>
+          <CloseButton handleClick={onDismiss}  />  
+        </div>
+      {children}
       </dialog>
     </div>,
     document.getElementById('modal-root')

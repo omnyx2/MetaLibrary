@@ -1,11 +1,9 @@
 'use-client'
 import React, { useState, useEffect } from 'react';
-import MarkdownEditor from '../MarkdownEditor';
-import { fetchMarkdowns, fetchInitMarkdown, handleSubmit } from './EditorHooks';
+import MarkdownEditor from './MDXDataValidation';
+import { fetchMarkdowns, fetchInitMarkdown, handleSubmit, handleEdit,saveMarkdownFromRefresh } from './EditorHooks';
 
-
-
-
+//Markdown manager에 대해서 여러기타 데이터 상태 관리
 const MarkdownManager = ({bookTitle, topic, articleId}) => {
   const [markdowns, setMarkdowns] = useState([]);
   const [currentMarkdown, setCurrentMarkdown] = useState('# ');
@@ -18,6 +16,7 @@ const MarkdownManager = ({bookTitle, topic, articleId}) => {
     if(!!articleId) {
       fetchInitMarkdown(setCurrentMarkdown, articleId);
     }
+    saveMarkdownFromRefresh(setCurrentMarkdown);
   }, []);
 
   return (
@@ -31,9 +30,8 @@ const MarkdownManager = ({bookTitle, topic, articleId}) => {
           </li>
         ))}
       </ul> */}
-      <article className='w-[60rem] pr-2 pl-12'>
-        <button onClick={(e) => handleSubmit(e, editId, setEditId, currentMarkdown, bookTitle, topic, setMessage)}>Get markdown</button>
-        <MarkdownEditor ref={ref} value={currentMarkdown} setValue={setCurrentMarkdown} />
+      <article className='w-[60rem] te pr-2 pl-12'>
+        <MarkdownEditor ref={ref} value={currentMarkdown} setValue={ (markdown) => handleEdit(markdown, setCurrentMarkdown, setEditId)} />
       </article>
       <div/>
 

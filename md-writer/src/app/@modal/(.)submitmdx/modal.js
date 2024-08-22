@@ -18,17 +18,16 @@ export function Modal({ children } ) {
   function onDismiss() {
     router.back();
   }
-  console.log("modal portal")
 
   return createPortal(
-    <div className="modal-backdrop w-[70vw] h-[70vh] ">
-      <dialog ref={dialogRef} className="modal" onClose={onDismiss}>
-        <div className='w-full flex justify-between bg-gray-100 p-2'>
-          <div className='text-sm'> User Manual Page</div>
+    <div className="modal-backdrop">
+      <dialog ref={dialogRef} className="relative modal animate-open" onClose={onDismiss}>
+      <div className='w-full flex justify-between bg-gray-100 p-2'>
+          <div className='text-sm flex justify-center items-center'> Publishing</div>
           <CloseButton handleClick={onDismiss}  />  
         </div>
+      {/* <button onClick={onDismiss}  */}
         {children}
-        <button onClick={onDismiss} className="close-button" />
       </dialog>
     </div>,
     document.getElementById('modal-root')

@@ -5,6 +5,11 @@ export const fetchMarkdown = async (id) => {
     return result
 };
 
+export const saveMarkdownFromRefresh = async (setCurrentMarkdown) =>{
+    const content = await localStorage.getItem("markdown") || false;
+    if(!content) setCurrentMarkdown(content)
+}
+
 export const createMarkdown = async ({ setEditId, data, setMessage}) => {
     const { currentMarkdown,  bookTitle, topic, } = data
     const result = await createMarkdownAPI({ currentMarkdown,  bookTitle, topic, })
@@ -56,7 +61,8 @@ setMessage(result.message);
 };
 
 export const handleEdit = (markdown, setCurrentMarkdown, setEditId) => {
+    localStorage.setItem('markdown', markdown);
+    setCurrentMarkdown(markdown);
     console.log(markdown)
-    setCurrentMarkdown(markdown.markdown);
     setEditId(markdown.id);
 };

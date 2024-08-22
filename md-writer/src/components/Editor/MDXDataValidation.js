@@ -1,8 +1,8 @@
-import TitleHeader from '../components/TitleHeader'
+import TitleHeader from '../TitleHeader'
 import dynamic from 'next/dynamic'
 import '@mdxeditor/editor/style.css'
-
-const MDXEditor = dynamic(() => import('./MDXEditor/MDXEditor'), { ssr: false })
+// Markdown Editor쪽에서 데이터 관리 및 인코딩 및 적합성 관리
+const MDXEditor = dynamic(() => import('../MDXEditor/MDXEditor'), { ssr: false })
 
 function isEnglish(text) {
   // This regex matches basic Latin characters, numbers, and common punctuation
@@ -29,7 +29,7 @@ function checkTitleIsEnglish(value) {
 
 
 
-function MarkdownEditor({ value, setValue }) {
+function MarkdownEditor({ value, setValue, ref }) {
   function handleSetValue (value) {
    console.log(value)
     // if(value[0] !== "#" ) {
@@ -45,8 +45,8 @@ function MarkdownEditor({ value, setValue }) {
   
   return (
     <div data-color-mode="light" className="h-[90vh]"  >
-      <TitleHeader title={getTitleOnly(value)} toggle={ value.split('\n').length > 1 }/>
-      <MDXEditor markdown={value} handleOnChange={handleSetValue} />
+      <TitleHeader title={() => getTitleOnly(value)} toggle={ value.split('\n').length > 1 }/>
+      <MDXEditor ref={ref} markdown={value} handleOnChange={handleSetValue} />
     </div>
   );
 }

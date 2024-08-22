@@ -1,10 +1,10 @@
 'use client'
  import { useState, useEffect } from "react";
 import AuthForm from '../components/AuthForm'
-import MarkdownManager from '../components/Editor/MarkdownManager'
+import MarkdownManager from '../components/Editor/MDXDataHandler'
 import Editor from '../components/Editor'
 import { useSearchParams } from 'next/navigation'
-import JumpingBooks  from "@/components/SVGs/JupmingBooks";
+import JumpingBooks  from "@/components/SVGs/JumpingBooks";
 
 import { useRouter } from 'next/router';
  
