@@ -6,6 +6,7 @@ import styles from './Header.module.css';
 import SendIcon from './SVGs/SendIcon';
 import InformationIcon from './SVGs/InformationIcon';
 import HistoryIcon from './SVGs/HistoryIcon';
+import Library from './SVGs/Library';
 const ToggleSideBar = () => {
   return (
     <div>
@@ -76,7 +77,7 @@ const Header = ({ SubmitFunc }) => {
                 <div class="p-4">
                      <ul class="mt-6">
                         <ClickAbleToolLinkButtion canClick={markdownId !== undefined ? false : true} icon={<HistoryIcon/>} baseUrl={"history"} arg="asfdasfdafsafsdfsfsfasdf"/>
-                        <ClickAbleToolLinkButtion canClick={markdownId !== undefined ? false : true} icon={<HistoryIcon/>} baseUrl={"history"} arg="asfdasfdafsafsdfsfsfasdf"/>
+                        <ClickAbleToolLinkButtion canClick={true} icon={<Library/>} baseUrl={"library"} arg=""/>
                         <ClickAbleToolLinkButtion canClick={markdownId !== undefined ? false : true} icon={<HistoryIcon/>} baseUrl={"history"} arg="asfdasfdafsafsdfsfsfasdf"/>
                         <ClickAbleToolLinkButtion canClick={true} icon={<InformationIcon/>} baseUrl={"usermanual"} arg=""/>
                     </ul>

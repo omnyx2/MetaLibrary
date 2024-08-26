@@ -16,7 +16,8 @@ function Editor() {
   const [configs, setConfigs] = useState([]);
 
   useEffect(() => {
-    fetchAllTopics() 
+    fetchAllTopics()
+    console.log("hi")
   }, []);
   useEffect(() => {
     setBookAndTopicList(buildSDoubleSelection(configs));

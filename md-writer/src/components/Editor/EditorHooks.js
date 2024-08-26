@@ -7,7 +7,10 @@ export const fetchMarkdown = async (id) => {
 
 export const saveMarkdownFromRefresh = async (setCurrentMarkdown) =>{
     const content = await localStorage.getItem("markdown") || false;
-    if(!content) setCurrentMarkdown(content)
+    if(!content) {
+        setCurrentMarkdown(content)
+        console.log("hi")
+    }
 }
 
 export const createMarkdown = async ({ setEditId, data, setMessage}) => {

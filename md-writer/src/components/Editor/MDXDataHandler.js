@@ -16,7 +16,8 @@ const MarkdownManager = ({bookTitle, topic, articleId}) => {
     if(!!articleId) {
       fetchInitMarkdown(setCurrentMarkdown, articleId);
     }
-    saveMarkdownFromRefresh(setCurrentMarkdown);
+    // bug 발생 변경 금지
+    // saveMarkdownFromRefresh(setCurrentMarkdown);
   }, []);
 
   return (
